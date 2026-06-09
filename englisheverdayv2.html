@@ -1,0 +1,3052 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Học Tiếng Anh Mỗi Ngày - Luyện Chép Chính Tả</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px; /* Tối ưu cho cả màn hình điện thoại đứng */
+            background: var(--card);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin-top: 5px;
+            margin-bottom: 15px;
+            color: #0f172a;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        select, textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+
+        .lesson-selector {
+            margin-bottom: 15px;
+            background: #eff6ff;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #bfdbfe;
+        }
+
+        .video-box {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            background: #000;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 15px;
+        }
+
+        .video-box iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Danh sách câu - thiết kế dạng thẻ dễ bấm trên Android */
+        .subtitle-list {
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #f8fafc;
+            margin-bottom: 15px;
+        }
+
+        .subtitle-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .subtitle-item.active {
+            background-color: #dcfce7;
+            border-left: 4px solid var(--success);
+            font-weight: bold;
+            color: #065f46;
+        }
+
+        /* Hệ thống nút điều khiển to rõ cho màn hình cảm ứng */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 14px 10px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+        }
+
+        button:active {
+            opacity: 0.8;
+        }
+
+        .btn-blue { background-color: var(--primary); }
+        .btn-gray { background-color: #475569; }
+        .btn-orange { background-color: #f59e0b; }
+        .btn-cyan { background-color: #06b6d4; }
+        .btn-green { background-color: var(--success); }
+
+        .typing-area {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        textarea {
+            height: 80px;
+            resize: none;
+            font-size: 16px;
+            line-height: 1.4;
+            border: 2px solid var(--border);
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .result-display {
+            padding: 12px;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            background: #fafafa;
+            min-height: 24px;
+            font-size: 17px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .word-correct { color: var(--success); font-weight: bold; margin-right: 4px; }
+        .word-incorrect { color: var(--danger); text-decoration: line-through; font-weight: bold; margin-right: 4px; }
+
+        .ipa-section {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .checkbox-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            background: #f1f5f9;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Luyện Nghe Chép Chính Tả Đa Thiết Bị</h2>
+    
+    <div class="lesson-selector">
+        <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 6px; color: #1e3a8a;">📖 Chọn bài học đã lưu sẵn:</label>
+        <select id="lessonSelect" onchange="changeLesson()">
+            </select>
+    </div>
+
+    <div class="video-box">
+        <div id="player"></div>
+    </div>
+
+    <div class="checkbox-panel">
+        <label style="cursor: pointer; font-weight: 500;">
+            <input type="checkbox" id="autoLoopCheck" checked> Tự động lặp câu
+        </label>
+        <button type="button" id="toggleScriptBtn" onclick="toggleScriptVisibility()" style="padding: 6px 12px; font-size: 12px; background-color: #64748b;">👁️ Ẩn đáp án danh sách</button>
+    </div>
+
+    <div class="subtitle-list" id="subtitleList"></div>
+
+    <div class="controls-grid">
+        <button class="btn-gray" onclick="rewindSentence()">⏮ Nghe lại câu</button>
+        <button class="btn-gray" id="playPauseBtn" onclick="togglePlay()">⏸ Tạm dừng</button>
+        <button class="btn-orange" onclick="checkAnswers()">🔍 Kiểm tra đúng sai</button>
+        <button class="btn-cyan" onclick="giveHint()">💡 Gợi ý chữ tiếp</button>
+        <button class="btn-green" onclick="nextSentence()" style="grid-column: span 2; padding: 12px;">Qua câu tiếp theo ⏭</button>
+    </div>
+
+    <div class="typing-area">
+        <textarea id="userInput" placeholder="Nghe và gõ lại câu tại đây..."></textarea>
+        
+        <div class="result-display" id="resultDisplay">Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.</div>
+
+        <div class="ipa-section">
+            <div style="display: flex; gap: 6px;">
+                <input type="text" id="ipaInput" placeholder="Nhập từ cần xem IPA..." style="padding: 8px;">
+                <button class="btn-gray" style="padding: 8px 15px; font-size: 13px; white-space: nowrap;" onclick="searchIPA()">Xem IPA</button>
+            </div>
+            <div id="ipaResult" style="margin-top: 8px; font-size: 14px; font-weight: 500; color: #1e3a8a; min-height: 18px;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- KHU VỰC CẤU HÌNH: ÚP VÀ LƯU TRỮ BÀI HỌC CỐ ĐỊNH TẠI ĐÂY ---
+    // Anh có thể thêm bao nhiêu bài học tùy ý vào mảng này. Khi lưu lên GitHub, cả Android và PC đều đọc chung.
+    var DANH_SACH_BAI_HOC = [
+        {
+            title: "Bài mẫu 1: Khởi động luyện nghe",
+            youtubeUrl: "https://www.youtube.com/watch?v=rzFS6eqyepw&t=286s", // Anh thay link youtube thực tế của anh vào đây
+            subtitles: `
+1
+00:00:02,469 --> 00:00:05,572
+Welcome back everyone to another slow
+
+2
+00:00:05,572 --> 00:00:09,743
+English comprehensible input vlog for
+
+3
+00:00:09,743 --> 00:00:14,581
+beginners and intermediates. Let me close
+
+4
+00:00:14,581 --> 00:00:20,420
+this door. This is a hardwood door. You
+
+5
+00:00:20,420 --> 00:00:25,358
+can hear it's very thick, very thick and
+
+6
+00:00:25,358 --> 00:00:29,095
+strong and sturdy. This is a sturdy
+
+7
+00:00:29,129 --> 00:00:34,267
+door. Now I'm going to lock the door and
+
+8
+00:00:34,267 --> 00:00:36,236
+I'm going to lock it as well with the
+
+9
+00:00:36,236 --> 00:00:40,039
+deadbolt lock. This is just a safety lock
+
+10
+00:00:40,039 --> 00:00:43,076
+so that if someone tries to open it, this
+
+11
+00:00:43,076 --> 00:00:45,879
+latch will stop the door from opening and
+
+12
+00:00:45,879 --> 00:00:47,881
+this right here is a deadbolt lock.
+
+13
+00:00:48,415 --> 00:00:52,252
+This is my key card. My key card. This is
+
+14
+00:00:52,252 --> 00:00:54,821
+used to open the door. Now I'm sure
+
+15
+00:00:54,821 --> 00:00:57,857
+you're probably wondering and thinking to
+
+16
+00:00:57,857 --> 00:01:00,727
+yourself what is in my hand and I'm
+
+17
+00:01:00,727 --> 00:01:03,463
+about to show you. So let's walk over or
+
+18
+00:01:03,463 --> 00:01:06,699
+go over to the dining table and let me
+
+19
+00:01:06,699 --> 00:01:09,569
+show you what we have here. You can see
+
+20
+00:01:09,569 --> 00:01:11,838
+my mom's over there. It's probably blown
+
+21
+00:01:11,838 --> 00:01:14,441
+out but you can come over to the dining
+
+22
+00:01:14,441 --> 00:01:15,141
+table. So here you can see with your eyes
+
+23
+00:01:23,983 --> 00:01:26,352
+table. So here you can see with your eyes
+
+24
+00:01:26,386 --> 00:01:29,622
+we have an assortment of different
+
+25
+00:01:29,622 --> 00:01:33,226
+products and foods. Here we have food
+
+26
+00:01:33,226 --> 00:01:35,795
+that we delivered so we went on an app
+
+27
+00:01:35,795 --> 00:01:37,797
+and we ordered this food and then
+
+28
+00:01:37,797 --> 00:01:40,066
+someone came on a scooter and delivered
+
+29
+00:01:40,066 --> 00:01:43,770
+it to us. This is like delivery. If you
+
+30
+00:01:43,770 --> 00:01:45,705
+were to go to the restaurant and pick it
+
+31
+00:01:45,705 --> 00:01:47,907
+up and not eat it at the restaurant, that
+
+32
+00:01:47,907 --> 00:01:50,276
+is called takeout and if you were to eat
+
+33
+00:01:50,276 --> 00:01:52,946
+in the restaurant that would be dine in.
+
+34
+00:01:53,046 --> 00:01:56,616
+So delivery, takeout and dine in. Here
+
+35
+00:01:56,616 --> 00:01:59,352
+you can see we have different fruits.
+
+36
+00:01:59,886 --> 00:02:01,855
+What did you do to this watermelon mom?
+
+37
+00:02:01,855 --> 00:02:04,190
+How would you describe this process that
+
+38
+00:02:04,190 --> 00:02:06,759
+you did here? I sliced the watermelon.
+
+39
+00:02:07,126 --> 00:02:10,330
+Yes so she sliced or cut the watermelon
+
+40
+00:02:10,330 --> 00:02:14,367
+into these triangle shapes. Yes that one
+
+41
+00:02:14,367 --> 00:02:17,270
+I sliced and this one I removed the skin
+
+42
+00:02:17,337 --> 00:02:20,540
+of these pieces off watermelon. Yeah and
+
+43
+00:02:20,540 --> 00:02:24,144
+here you can see this is mango. This was
+
+44
+00:02:24,144 --> 00:02:27,113
+filled to the brim here but I like mango
+
+45
+00:02:27,113 --> 00:02:29,249
+so I was eating it and you can see it is
+
+46
+00:02:29,249 --> 00:02:31,317
+really soft. That's just because the
+
+47
+00:02:31,317 --> 00:02:35,054
+mango is very ripe so it's really sweet
+
+48
+00:02:35,054 --> 00:02:37,790
+right now. But how would you describe
+
+49
+00:02:37,790 --> 00:02:41,094
+this piece of watermelon? How would you
+
+50
+00:02:41,127 --> 00:02:45,164
+describe this piece of watermelon? This
+
+51
+00:02:45,164 --> 00:02:47,867
+piece of watermelon looks very juicy.
+
+52
+00:02:48,468 --> 00:02:51,371
+This piece of watermelon is red and
+
+53
+00:02:51,371 --> 00:02:54,774
+green, red and green and there are also
+
+54
+00:02:54,774 --> 00:02:58,378
+black seeds in the watermelon and finally
+
+55
+00:02:58,378 --> 00:03:01,181
+this watermelon is sweet. It is
+
+56
+00:03:01,181 --> 00:03:04,984
+sweet and after I eat it I believe I will
+
+57
+00:03:04,984 --> 00:03:08,054
+feel very refreshed. Now tell me
+
+58
+00:03:08,087 --> 00:03:11,291
+this action. What action is this from
+
+59
+00:03:11,291 --> 00:03:18,798
+these three options? So that was eating.
+
+60
+00:03:19,232 --> 00:03:21,601
+I was eating the watermelon. It wasn't
+
+61
+00:03:21,601 --> 00:03:24,137
+cooking and it wasn't drinking. It was
+
+62
+00:03:24,137 --> 00:03:26,573
+eating. Now you said you wanted to get a
+
+63
+00:03:26,573 --> 00:03:28,841
+glass of water mom? Yes I'm short one
+
+64
+00:03:28,841 --> 00:03:32,312
+glass of water. I filled up two. I'm
+
+65
+00:03:32,312 --> 00:03:35,014
+going to fill up another glass from this
+
+66
+00:03:35,014 --> 00:03:37,450
+water dispenser. Okay so you can see
+
+67
+00:03:37,450 --> 00:03:41,154
+she's pressing in this button and then
+
+68
+00:03:41,154 --> 00:03:43,756
+water is coming out. So she just filled
+
+69
+00:03:43,756 --> 00:03:47,327
+up this glass of water. It is almost full
+
+70
+00:03:47,327 --> 00:03:50,330
+but it's not full to the brim but it is
+
+71
+00:03:50,330 --> 00:03:52,599
+almost full. Anyway let's bring that to
+
+72
+00:03:52,599 --> 00:03:55,134
+the table and let's open up the three
+
+73
+00:03:55,134 --> 00:03:58,671
+dishes we got to see which one is the
+
+74
+00:03:58,738 --> 00:04:01,207
+best. Okay so what are the three dishes
+
+75
+00:04:01,207 --> 00:04:05,478
+we have here? I believe one is pho, the
+
+76
+00:04:05,545 --> 00:04:09,015
+other is bun cha and then banh mi. Did
+
+77
+00:04:09,015 --> 00:04:09,816
+you get any dessert
+
+78
+00:04:09,816 --> 00:04:11,150
+or no? The fruit is the
+
+79
+00:04:11,150 --> 00:04:14,420
+dessert. Yeah so Leon ordered these. Now
+
+80
+00:04:14,420 --> 00:04:16,289
+I believe this is the
+
+81
+00:04:16,289 --> 00:04:19,292
+pho. Oh yeah. So this
+
+82
+00:04:19,292 --> 00:04:21,494
+pho how would you describe this
+
+83
+00:04:21,494 --> 00:04:22,595
+container? What kind
+
+84
+00:04:22,595 --> 00:04:23,529
+of container is this?
+
+85
+00:04:25,164 --> 00:04:28,635
+This is a paper or cardboard container
+
+86
+00:04:28,635 --> 00:04:32,705
+with a plastic lid. Now what am I doing?
+
+87
+00:04:36,109 --> 00:04:39,212
+I'm taking off the plastic lid and now
+
+88
+00:04:39,212 --> 00:04:41,614
+I'm going to place the plastic lid to
+
+89
+00:04:41,614 --> 00:04:44,417
+the side and I'm going to move my water.
+
+90
+00:04:45,251 --> 00:04:47,153
+Now I'm going to open this plastic bag
+
+91
+00:04:47,153 --> 00:04:51,658
+and take out these thin pieces of bread
+
+92
+00:04:51,658 --> 00:04:53,926
+and finally I'm going to open up the last
+
+93
+00:04:53,960 --> 00:04:57,063
+plastic bag. This plastic bag has the
+
+94
+00:04:57,063 --> 00:04:59,132
+noodles and I'm going to dump the
+
+95
+00:04:59,132 --> 00:05:01,601
+noodles into the soup.
+
+96
+00:05:06,906 --> 00:05:10,677
+So here we have our soup, our pho and
+
+97
+00:05:10,677 --> 00:05:12,745
+these are chopsticks. Whoa these are
+
+98
+00:05:12,745 --> 00:05:15,448
+actually thick chopsticks. Yeah. That's
+
+99
+00:05:15,448 --> 00:05:17,717
+kind of nice. It has been sitting for a
+
+100
+00:05:17,717 --> 00:05:20,186
+while so the noodles have stuck together
+
+101
+00:05:20,186 --> 00:05:22,188
+but I think if we let them soak for a
+
+102
+00:05:22,221 --> 00:05:25,158
+bit they'll loosen up enough so that we
+
+103
+00:05:25,158 --> 00:05:27,727
+can eat the noodles easily. Do you
+
+104
+00:05:27,727 --> 00:05:31,097
+usually add chili to your pho? I do. I do
+
+105
+00:05:31,097 --> 00:05:34,767
+like it more spicy. For me I usually like
+
+106
+00:05:34,767 --> 00:05:38,171
+my soups and dishes spicy but I think for
+
+107
+00:05:38,171 --> 00:05:40,673
+pho specifically I prefer it without
+
+108
+00:05:40,673 --> 00:05:43,176
+spice. Same thing with fried rice. I
+
+109
+00:05:43,176 --> 00:05:45,211
+prefer those two dishes without any
+
+110
+00:05:45,211 --> 00:05:48,214
+additional spice. What about you? Do you
+
+111
+00:05:48,214 --> 00:05:51,250
+prefer to always add spice to your food
+
+112
+00:05:51,317 --> 00:05:53,920
+or only sometimes or never? Can you eat
+
+113
+00:05:53,920 --> 00:05:57,357
+spicy food? I love eating spicy food and
+
+114
+00:05:57,357 --> 00:05:59,492
+I think I handle it well. Some people may
+
+115
+00:05:59,492 --> 00:06:02,228
+disagree but in my opinion I could eat
+
+116
+00:06:02,228 --> 00:06:05,498
+anything spicy. There's a piece of lime
+
+117
+00:06:05,498 --> 00:06:09,836
+as well. I think we can open up all the
+
+118
+00:06:09,836 --> 00:06:12,038
+dishes, have them all here. You guys can
+
+119
+00:06:12,038 --> 00:06:14,307
+see all the dishes. I'll bring you guys a
+
+120
+00:06:14,307 --> 00:06:16,809
+little bit closer so you can also enjoy
+
+121
+00:06:16,809 --> 00:06:17,610
+the view. Okay so what other dishes do we
+
+122
+00:08:21,701 --> 00:08:24,003
+the view. Okay so what other dishes do we
+
+123
+00:08:24,003 --> 00:08:25,972
+have to prepare here? We have the bun
+
+124
+00:08:25,972 --> 00:08:29,876
+cha. So here you can see this is a
+
+125
+00:08:29,876 --> 00:08:32,345
+styrofoam bowl. The other bowl was a
+
+126
+00:08:32,345 --> 00:08:35,281
+cardboard bowl. This is a styrofoam bowl.
+
+127
+00:08:35,581 --> 00:08:37,416
+One thing I would like to say is you can
+
+128
+00:08:37,416 --> 00:08:39,785
+never put this in a microwave because
+
+129
+00:08:39,785 --> 00:08:43,389
+it will catch on fire and this is a very
+
+130
+00:08:43,389 --> 00:08:46,525
+flimsy plastic lid. You can see it's very
+
+131
+00:08:46,525 --> 00:08:50,796
+flimsy. See very very flimsy. Okay this
+
+132
+00:08:50,796 --> 00:08:51,797
+is the fish sauce.
+
+133
+00:08:52,098 --> 00:08:53,366
+I'm going to pour it in.
+
+134
+00:08:53,399 --> 00:08:54,867
+Should we take out the spring roll? You
+
+135
+00:08:54,867 --> 00:08:57,436
+can put it to the side here and now pour
+
+136
+00:08:57,436 --> 00:09:00,706
+that fish sauce into the bun cha because
+
+137
+00:09:00,706 --> 00:09:03,376
+this is how the dish comes. This is one
+
+138
+00:09:03,376 --> 00:09:05,711
+of my favorite dishes. I really love this
+
+139
+00:09:05,711 --> 00:09:09,148
+dish. It's quite delicious. Yes. So yeah
+
+140
+00:09:09,148 --> 00:09:12,585
+now we have the bun cha, the pho and this
+
+141
+00:09:12,585 --> 00:09:14,287
+is also part of the bun cha. I think you
+
+142
+00:09:14,287 --> 00:09:16,856
+could put it on this plate. This is just
+
+143
+00:09:16,856 --> 00:09:18,958
+a small white plate.
+
+144
+00:09:19,325 --> 00:09:20,660
+Small white plate. Now
+
+145
+00:09:20,726 --> 00:09:22,895
+I'm going to place it down on the table.
+
+146
+00:09:22,895 --> 00:09:26,966
+Tip out the noodles. You can pass that
+
+147
+00:09:26,966 --> 00:09:28,301
+bag. I'm putting all
+
+148
+00:09:28,301 --> 00:09:30,836
+the garbage here. That's one thing,
+
+149
+00:09:30,836 --> 00:09:31,971
+when you do get
+
+150
+00:09:31,971 --> 00:09:33,739
+takeout it does create a lot
+
+151
+00:09:33,739 --> 00:09:36,309
+of garbage. And the bun cha also comes
+
+152
+00:09:36,309 --> 00:09:39,745
+with these greens. I'll put it in this
+
+153
+00:09:39,745 --> 00:09:42,315
+bowl here. Kind of fell on the table but
+
+154
+00:09:42,315 --> 00:09:43,716
+the table was clean.
+
+155
+00:09:44,150 --> 00:09:45,651
+Yeah and then last but
+
+156
+00:09:45,685 --> 00:09:48,654
+certainly not least we have the banh mi.
+
+157
+00:09:48,921 --> 00:09:51,490
+And we picked all Vietnamese dishes. So
+
+158
+00:09:51,490 --> 00:09:54,627
+this is a Hanoi style banh mi. Let me
+
+159
+00:09:54,627 --> 00:09:55,728
+open it up and show
+
+160
+00:09:55,728 --> 00:09:56,729
+you guys what's inside.
+
+161
+00:09:57,496 --> 00:09:59,365
+Wow this actually looks good. It looks
+
+162
+00:09:59,365 --> 00:10:02,001
+like there's some egg, some sausage and
+
+163
+00:10:02,001 --> 00:10:04,971
+some greens. So these are all our dishes.
+
+164
+00:10:05,504 --> 00:10:07,306
+What do you want to start with mom? Oh I
+
+165
+00:10:07,340 --> 00:10:09,342
+think you should start with the pho. Let
+
+166
+00:10:09,342 --> 00:10:12,178
+me try a piece of meat first.
+
+167
+00:10:15,982 --> 00:10:19,785
+Mmm now let's try the pho. Let's try the
+
+168
+00:10:19,785 --> 00:10:21,754
+pho and see how good
+
+169
+00:10:21,754 --> 00:10:23,889
+the pho is. Let's try some
+
+170
+00:10:23,889 --> 00:10:26,892
+meat. Oh this looks like a brisket. Beef
+
+171
+00:10:26,892 --> 00:10:27,393
+brisket.
+
+172
+00:10:27,393 --> 00:10:30,229
+Mmm now let me try some
+
+173
+00:10:30,229 --> 00:10:34,333
+of the broth. Looks good. Try it. The
+
+174
+00:10:34,333 --> 00:10:36,168
+meat is very tender.
+
+175
+00:10:36,569 --> 00:10:39,138
+The beef is tender. It's not very chewy.
+
+176
+00:10:39,405 --> 00:10:40,473
+You don't have to chew
+
+177
+00:10:40,473 --> 00:10:43,609
+a lot. It's very tender,
+
+178
+00:10:43,843 --> 00:10:46,946
+soft and the broth is very clear and
+
+179
+00:10:46,946 --> 00:10:48,080
+delicious. There's a lot of
+
+180
+00:10:48,080 --> 00:10:49,782
+flavor. You can also take these
+
+181
+00:10:49,815 --> 00:10:53,085
+which are very hard pieces of bread and
+
+182
+00:10:53,085 --> 00:10:54,520
+dip it in there and then
+
+183
+00:10:54,520 --> 00:10:56,722
+eat it as well. Yeah and then
+
+184
+00:10:56,722 --> 00:11:00,459
+lastly we have the banh mi. The banh mi.
+
+185
+00:11:00,659 --> 00:11:03,329
+So here we have the banh mi. My mom cut
+
+186
+00:11:03,329 --> 00:11:05,164
+it into three pieces.
+
+187
+00:11:05,531 --> 00:11:08,267
+So this is Hanoi style from looking into
+
+188
+00:11:08,267 --> 00:11:09,902
+the inside of it. I can
+
+189
+00:11:09,902 --> 00:11:13,539
+see sausage, egg, some other
+
+190
+00:11:13,539 --> 00:11:17,376
+type of meat, lettuce, tomatoes, maybe
+
+191
+00:11:17,376 --> 00:11:18,344
+onions. I can't really
+
+192
+00:11:18,344 --> 00:11:19,678
+tell. I wonder if they put some
+
+193
+00:11:19,678 --> 00:11:22,548
+of that liver spread on it too. Maybe but
+
+194
+00:11:22,548 --> 00:11:24,316
+the thing I love the most
+
+195
+00:11:24,316 --> 00:11:25,918
+about banh mi is the bread.
+
+196
+00:11:26,185 --> 00:11:27,987
+The bread I think is delicious. Here you
+
+197
+00:11:27,987 --> 00:11:30,589
+can try one as well. Let's try it
+
+198
+00:11:30,589 --> 00:11:32,024
+together. Cheers. Cheers.
+
+199
+00:11:32,024 --> 00:11:39,031
+Let's do it. Mmm it has the liver sausage
+
+200
+00:11:39,031 --> 00:11:41,600
+too. Okay so right now we
+
+201
+00:11:41,600 --> 00:11:43,202
+are watching some TV after
+
+202
+00:11:43,369 --> 00:11:45,571
+eating and here you can see we have the
+
+203
+00:11:45,571 --> 00:11:47,206
+other snacks. So can you
+
+204
+00:11:47,206 --> 00:11:49,842
+tell me mom what snacks do we
+
+205
+00:11:49,842 --> 00:11:52,745
+have here? Oh we have some local snacks
+
+206
+00:11:52,745 --> 00:11:53,846
+that we don't get in
+
+207
+00:11:53,846 --> 00:11:55,648
+Canada. This is baked
+
+208
+00:11:55,648 --> 00:11:58,150
+prawn with melted cheese. That one is
+
+209
+00:11:58,150 --> 00:11:59,652
+going to be interesting and
+
+210
+00:11:59,652 --> 00:12:02,855
+then nori seaweed lays chips.
+
+211
+00:12:03,255 --> 00:12:04,690
+And then here, coconut flavor peanut.
+
+212
+00:12:04,690 --> 00:12:06,792
+And then here, coconut flavor peanut.
+
+213
+00:12:07,326 --> 00:12:09,695
+Apparently they get covered with this
+
+214
+00:12:09,695 --> 00:12:11,464
+outer coconut-flavored
+
+215
+00:12:11,597 --> 00:12:14,333
+layer of something. Mmm that looks
+
+216
+00:12:14,333 --> 00:12:17,169
+interesting. All three of these snacks
+
+217
+00:12:17,169 --> 00:12:18,904
+look very good. These
+
+218
+00:12:18,904 --> 00:12:23,242
+two are chips and this is peanuts. Can
+
+219
+00:12:23,242 --> 00:12:24,543
+you give me three
+
+220
+00:12:24,543 --> 00:12:28,180
+differences between these two bags of
+
+221
+00:12:28,180 --> 00:12:31,050
+lays chips? Write your answers in the
+
+222
+00:12:31,050 --> 00:12:33,586
+comments. So first of all
+
+223
+00:12:33,586 --> 00:12:35,888
+the bags are different colors.
+
+224
+00:12:36,589 --> 00:12:39,625
+They are also different flavors and
+
+225
+00:12:39,625 --> 00:12:42,595
+finally they are different sizes. You can
+
+226
+00:12:42,595 --> 00:12:43,896
+see the bag of chips
+
+227
+00:12:43,896 --> 00:12:48,334
+on the right is bigger, bigger than the
+
+228
+00:12:48,334 --> 00:12:50,069
+bag on the left. Let me
+
+229
+00:12:50,069 --> 00:12:51,837
+know if you guys had similar
+
+230
+00:12:51,871 --> 00:12:54,774
+answers to me or different answers. You
+
+231
+00:12:54,774 --> 00:12:57,409
+can see we also have some remotes here.
+
+232
+00:12:57,676 --> 00:12:58,711
+Some are for the TV,
+
+233
+00:12:59,178 --> 00:13:01,747
+some are for the AC and others are for
+
+234
+00:13:01,747 --> 00:13:04,984
+this light. And on the left here we have
+
+235
+00:13:04,984 --> 00:13:06,352
+a bowl of watermelon
+
+236
+00:13:06,519 --> 00:13:09,755
+that my mom sliced up for us and we also
+
+237
+00:13:09,755 --> 00:13:12,792
+have a bowl of mango. Now
+
+238
+00:13:12,792 --> 00:13:14,593
+what do you call this type
+
+239
+00:13:14,593 --> 00:13:17,897
+of table that is usually near your sofa?
+
+240
+00:13:18,264 --> 00:13:19,632
+What is this type of table
+
+241
+00:13:19,632 --> 00:13:21,367
+called? What is the name of it?
+
+242
+00:13:21,967 --> 00:13:26,772
+This is a coffee table. A coffee table.
+
+243
+00:13:27,773 --> 00:13:30,709
+So now let's try these snacks. What do
+
+244
+00:13:41,821 --> 00:13:42,621
+So now let's try these snacks. What do
+
+245
+00:13:42,621 --> 00:13:44,223
+you want to try first?
+
+246
+00:13:44,690 --> 00:13:47,593
+Let's try the two potato chips. Which
+
+247
+00:13:47,593 --> 00:13:52,865
+one? I think this bigger green bag.
+
+248
+00:13:52,865 --> 00:13:55,201
+was it? Nori seaweed.
+
+249
+00:13:55,601 --> 00:13:58,304
+The chips themselves kind of look like
+
+250
+00:13:58,304 --> 00:14:00,840
+dill pickle chips and I like
+
+251
+00:14:00,840 --> 00:14:02,041
+dill pickle chips but I know
+
+252
+00:14:02,141 --> 00:14:03,876
+it's not going to taste like dill pickle.
+
+253
+00:14:05,144 --> 00:14:07,246
+Yeah I forgot. Asian chips
+
+254
+00:14:07,246 --> 00:14:09,682
+are different. In North America
+
+255
+00:14:09,748 --> 00:14:12,284
+we open the chips like this but in Asia
+
+256
+00:14:12,284 --> 00:14:15,721
+you have to peel the bag like
+
+257
+00:14:15,721 --> 00:14:17,523
+this. I'm learning something
+
+258
+00:14:17,590 --> 00:14:21,493
+new today. It's really hard to open the
+
+259
+00:14:21,493 --> 00:14:23,529
+chip. I think it's because our portion
+
+260
+00:14:23,529 --> 00:14:25,364
+sizes are really big
+
+261
+00:14:25,631 --> 00:14:29,401
+in America and North America. So we open
+
+262
+00:14:29,401 --> 00:14:30,402
+it to the top and
+
+263
+00:14:30,402 --> 00:14:31,904
+close it and keep it.
+
+264
+00:14:31,904 --> 00:14:35,074
+What about small chips though? Because I
+
+265
+00:14:35,074 --> 00:14:36,709
+didn't see here in the shop
+
+266
+00:14:36,709 --> 00:14:39,712
+like super super sized bags.
+
+267
+00:14:40,546 --> 00:14:42,481
+So here you can see this is what the
+
+268
+00:14:42,481 --> 00:14:44,583
+inside of the chip bag looks like. The
+
+269
+00:14:44,583 --> 00:14:46,619
+inside is this silver
+
+270
+00:14:47,519 --> 00:14:50,256
+like chrome color and it reflects the
+
+271
+00:14:50,256 --> 00:14:52,291
+chips and you can see this
+
+272
+00:14:52,291 --> 00:14:54,493
+bag is about half full. So it's
+
+273
+00:14:54,493 --> 00:14:56,695
+half filled with chips and the other half
+
+274
+00:14:56,695 --> 00:14:58,998
+is air. This is essentially what most
+
+275
+00:14:58,998 --> 00:15:00,199
+chips look like when
+
+276
+00:15:00,199 --> 00:15:02,835
+you open the bag. Now let's try these.
+
+277
+00:15:03,535 --> 00:15:04,436
+Would you like to try them
+
+278
+00:15:04,436 --> 00:15:06,238
+first? Let's try them together.
+
+279
+00:15:07,539 --> 00:15:08,941
+Three, two, one.
+
+280
+00:15:14,513 --> 00:15:18,317
+Very seaweedy. Very. It's kind of sweet.
+
+281
+00:15:18,918 --> 00:15:20,686
+Yeah it's slightly sweet and
+
+282
+00:15:20,686 --> 00:15:22,254
+it has like a fishy seaweed taste
+
+283
+00:15:22,254 --> 00:15:24,490
+to it. Not my favorite. Not my favorite.
+
+284
+00:15:24,757 --> 00:15:26,058
+My two favorite brands. I
+
+285
+00:15:26,058 --> 00:15:27,993
+have two. Can you guess one of
+
+286
+00:15:27,993 --> 00:15:31,797
+them? Brands I'm not sure but I know what
+
+287
+00:15:31,797 --> 00:15:34,300
+kind of flavor you like. You like
+
+288
+00:15:34,300 --> 00:15:35,801
+ketchup? Yeah. And the
+
+289
+00:15:35,834 --> 00:15:37,703
+other one? I like a lot of different
+
+290
+00:15:37,703 --> 00:15:39,505
+flavors so I wouldn't really say I have
+
+291
+00:15:39,505 --> 00:15:40,372
+like a favorite flavor
+
+292
+00:15:40,372 --> 00:15:43,175
+but I do love ketchup chips. Let me know
+
+293
+00:15:43,175 --> 00:15:44,877
+have you ever tried ketchup
+
+294
+00:15:44,877 --> 00:15:46,946
+chips and if you haven't would
+
+295
+00:15:46,946 --> 00:15:48,714
+you try them? And if you have tried them
+
+296
+00:15:48,714 --> 00:15:50,149
+did you like them or not?
+
+297
+00:15:50,649 --> 00:15:51,817
+But I'll tell you now my two
+
+298
+00:15:51,817 --> 00:15:54,820
+favorite brands are Miss Vicki's. I'm
+
+299
+00:15:54,820 --> 00:15:55,788
+sure you could have guessed
+
+300
+00:15:55,788 --> 00:15:56,622
+that one. Because they're so
+
+301
+00:15:56,622 --> 00:15:58,657
+yeah because they're so crispy and
+
+302
+00:15:58,657 --> 00:16:00,626
+crunchy. They're so crunchy. They're
+
+303
+00:16:00,626 --> 00:16:02,227
+really good. My other favorite
+
+304
+00:16:02,328 --> 00:16:06,665
+brand is Arriba. Those chips I've never
+
+305
+00:16:06,665 --> 00:16:08,400
+seen chips so coated with
+
+306
+00:16:08,400 --> 00:16:10,135
+flavor. It's just pure flavor.
+
+307
+00:16:10,135 --> 00:16:12,471
+They're so so so good. I think those are
+
+308
+00:16:12,471 --> 00:16:13,505
+my favorite and then Miss
+
+309
+00:16:13,505 --> 00:16:14,673
+Vicki's are my second favorite.
+
+310
+00:16:15,441 --> 00:16:17,476
+I have to add they are a taste bud
+
+311
+00:16:17,476 --> 00:16:19,845
+killer. They do kill your taste buds. Oh
+
+312
+00:16:19,845 --> 00:16:20,846
+no they rejuvenate
+
+313
+00:16:20,846 --> 00:16:24,450
+my taste buds and my soul. Okay so there
+
+314
+00:16:24,450 --> 00:16:25,818
+you go. That was a little bit
+
+315
+00:16:25,818 --> 00:16:28,420
+sweet and seaweedy like. Yeah
+
+316
+00:16:28,687 --> 00:16:30,522
+we'll give that to Leon later. He'll
+
+317
+00:16:30,522 --> 00:16:31,824
+finish them all so don't
+
+318
+00:16:31,824 --> 00:16:33,492
+worry. I'm not gonna waste it. Now
+
+319
+00:16:33,492 --> 00:16:36,528
+let's open this other bag. This is a very
+
+320
+00:16:36,528 --> 00:16:38,130
+Asian kind of chip
+
+321
+00:16:38,130 --> 00:16:40,032
+because it is yes. Baked prawn.
+
+322
+00:16:40,332 --> 00:16:42,201
+Baked prawn. I don't know the cheese on
+
+323
+00:16:42,201 --> 00:16:42,835
+it is a little bit
+
+324
+00:16:42,835 --> 00:16:46,772
+different. This one is better. This
+
+325
+00:16:46,772 --> 00:16:49,108
+one is a lot sweeter though. It's way
+
+326
+00:16:49,108 --> 00:16:51,944
+sweeter. Tastes like prawn. It's
+
+327
+00:16:51,944 --> 00:16:52,978
+completely different than
+
+328
+00:16:53,012 --> 00:16:55,581
+North American dill pickle and barbecue
+
+329
+00:16:55,581 --> 00:16:57,383
+and that kind of flavors and all
+
+330
+00:16:57,383 --> 00:16:58,484
+seasoned. We have all
+
+331
+00:16:58,484 --> 00:17:00,686
+seasoned. Oh sorry all dressed. That's
+
+332
+00:17:00,686 --> 00:17:01,620
+a Canadian thing right. Yeah
+
+333
+00:17:01,620 --> 00:17:02,788
+it's only in Canada. We have
+
+334
+00:17:02,788 --> 00:17:04,423
+all dressed chips and they're really
+
+335
+00:17:04,423 --> 00:17:05,924
+good. Yeah in Canada we have
+
+336
+00:17:05,924 --> 00:17:08,227
+like unique chip flavors. For
+
+337
+00:17:08,227 --> 00:17:10,162
+example ketchup chips and all dressed
+
+338
+00:17:10,162 --> 00:17:11,163
+chips. Those two flavors
+
+339
+00:17:11,163 --> 00:17:13,165
+of chips are very very good.
+
+340
+00:17:13,966 --> 00:17:15,768
+I'm sure we can get used to it. These
+
+341
+00:17:15,768 --> 00:17:16,969
+ones were good. These ones?
+
+342
+00:17:17,302 --> 00:17:18,737
+Those ones were not good. But
+
+343
+00:17:18,971 --> 00:17:21,140
+too bad that was a big bag. Oh they
+
+344
+00:17:21,140 --> 00:17:22,341
+didn't have a big bag of
+
+345
+00:17:22,341 --> 00:17:24,576
+those ones but it's very unique
+
+346
+00:17:24,576 --> 00:17:26,378
+so it's good to try it. It's a
+
+347
+00:17:26,378 --> 00:17:28,347
+very unique Vietnamese chip
+
+348
+00:17:28,347 --> 00:17:31,116
+flavor. Now let me open up
+
+349
+00:17:32,151 --> 00:17:34,019
+this other thing and let me know if
+
+350
+00:17:34,019 --> 00:17:35,320
+you're Vietnamese or have
+
+351
+00:17:35,320 --> 00:17:37,122
+been to Vietnam what is your
+
+352
+00:17:37,222 --> 00:17:40,058
+flavor of chips and I will go and try
+
+353
+00:17:40,058 --> 00:17:42,094
+them. Maybe I'll do a full chip review.
+
+354
+00:17:42,594 --> 00:17:43,662
+Oh maybe pour them in
+
+355
+00:17:43,695 --> 00:17:46,231
+my hand. Let's have a look at them. Okay
+
+356
+00:17:46,231 --> 00:17:48,267
+they kind of feel light. Yeah so
+
+357
+00:17:48,267 --> 00:17:48,801
+they're like a circular
+
+358
+00:17:48,801 --> 00:17:49,601
+they're like a circular
+
+359
+00:17:49,701 --> 00:17:52,337
+shape and they're very hard so I assume
+
+360
+00:17:52,337 --> 00:17:52,938
+they're gonna be quite
+
+361
+00:17:52,938 --> 00:17:54,940
+crunchy. Let's try them. They smell
+
+362
+00:17:54,940 --> 00:17:58,444
+a little bit coco-nutty. Coconuts. I don't
+
+363
+00:17:58,444 --> 00:17:59,111
+know if you can hear that.
+
+364
+00:17:59,645 --> 00:18:03,015
+Super crunchy. They're not sweet
+
+365
+00:18:03,015 --> 00:18:05,384
+that I like. A little bit but they're
+
+366
+00:18:05,384 --> 00:18:07,786
+yummy. I like the crunch on them. So
+
+367
+00:18:07,786 --> 00:18:09,288
+we've just tried the three
+
+368
+00:18:09,421 --> 00:18:11,857
+packaged snacks out of all three of
+
+369
+00:18:11,857 --> 00:18:14,393
+those. This bag of chips was my favorite.
+
+370
+00:18:14,793 --> 00:18:15,794
+Yeah the baked prawn.
+
+371
+00:18:16,195 --> 00:18:18,130
+Yeah those were the best. What about you?
+
+372
+00:18:18,363 --> 00:18:19,331
+What was your favorite?
+
+373
+00:18:19,598 --> 00:18:21,300
+From the chips. I like the baked
+
+374
+00:18:21,400 --> 00:18:25,003
+prawn the most and I don't mind these
+
+375
+00:18:25,003 --> 00:18:27,172
+peanuts. I like the crispy
+
+376
+00:18:27,172 --> 00:18:29,641
+crackling kind of sound that
+
+377
+00:18:29,641 --> 00:18:30,676
+they make when you chew. But chips
+
+378
+00:18:30,676 --> 00:18:31,143
+they make when you chew. But chips
+
+379
+00:18:31,143 --> 00:18:32,711
+make the same sound do they
+
+380
+00:18:32,711 --> 00:18:34,480
+not? Not as extreme. Listen.
+
+381
+00:18:35,047 --> 00:18:37,449
+No they are very very crunchy. And
+
+382
+00:18:37,449 --> 00:18:39,918
+No they are very very crunchy. And
+
+383
+00:18:39,918 --> 00:18:41,687
+here of course you know we have the
+
+384
+00:18:41,687 --> 00:18:43,088
+watermelon and mango.
+
+385
+00:18:43,589 --> 00:18:45,891
+And from those two which do you prefer?
+
+386
+00:18:46,291 --> 00:18:48,160
+Oh man I love watermelon
+
+387
+00:18:48,160 --> 00:18:50,162
+and I love mango but I think I
+
+388
+00:18:50,162 --> 00:18:52,431
+prefer mango. I'm not gonna lie something
+
+389
+00:18:52,431 --> 00:18:53,966
+about it. Can you guys give
+
+390
+00:18:53,966 --> 00:18:55,167
+me three different ways to
+
+391
+00:18:55,567 --> 00:18:57,970
+different ways to describe these two
+
+392
+00:18:57,970 --> 00:18:59,771
+fruits? The mango is yellow and the
+
+393
+00:18:59,771 --> 00:19:02,074
+green. Both of these fruits are very
+
+394
+00:19:02,074 --> 00:19:04,276
+sweet. Both of these fruits
+
+395
+00:19:04,276 --> 00:19:08,347
+are also very juicy. Also both of
+
+396
+00:19:08,347 --> 00:19:11,016
+these fruits can be quite messy but I
+
+397
+00:19:11,016 --> 00:19:13,118
+believe mangoes are messier
+
+398
+00:19:13,118 --> 00:19:14,753
+if you try to eat them without
+
+399
+00:19:15,120 --> 00:19:17,256
+peeling them. And both of these fruits
+
+400
+00:19:17,256 --> 00:19:20,125
+are very healthy for you but might make
+
+401
+00:19:20,125 --> 00:19:21,660
+you go to the washroom
+
+402
+00:19:21,760 --> 00:19:24,563
+fast. The mango especially the mango. No
+
+403
+00:19:24,563 --> 00:19:27,399
+the watermelon. Depends on the person I
+
+404
+00:19:27,399 --> 00:19:27,699
+guess. The watermelon.
+
+405
+00:19:29,034 --> 00:19:30,602
+But those are all the snacks we have
+
+406
+00:19:30,602 --> 00:19:32,437
+tried. Now we are going to
+
+407
+00:19:32,437 --> 00:19:34,940
+go out to a cafe and get some
+
+408
+00:19:34,940 --> 00:19:38,310
+Vietnamese coffee and other drinks to try
+
+409
+00:19:38,310 --> 00:19:39,878
+them and to also describe
+
+410
+00:19:39,878 --> 00:19:41,747
+them to you as well. So let's go
+
+411
+00:19:42,681 --> 00:19:43,615
+Get it at VolkaEnglish.com. Okay so now
+
+412
+00:19:43,615 --> 00:19:45,083
+we're on our dessert
+
+413
+00:19:45,083 --> 00:19:47,619
+of the day. We had a pretty big lunch and
+
+414
+00:19:47,619 --> 00:19:48,820
+then some snacks while we
+
+415
+00:19:48,820 --> 00:19:49,821
+were watching YouTube but
+
+416
+00:19:49,821 --> 00:19:52,291
+now we came to this like I guess cafe or
+
+417
+00:19:52,291 --> 00:19:53,625
+dessert shop. Yeah
+
+418
+00:19:53,625 --> 00:19:55,260
+So we ordered food here
+
+419
+00:19:55,260 --> 00:19:57,162
+you can see right here. This right here
+
+420
+00:19:57,162 --> 00:19:58,764
+is a QR code. You scan it
+
+421
+00:19:58,764 --> 00:20:00,098
+with your camera and this is
+
+422
+00:20:00,165 --> 00:20:03,435
+what the menu looks like. So we ordered
+
+423
+00:20:03,435 --> 00:20:06,138
+three items one for each of
+
+424
+00:20:06,138 --> 00:20:07,406
+us and we'll try these. We
+
+425
+00:20:07,406 --> 00:20:10,142
+all ordered different items and this is
+
+426
+00:20:10,142 --> 00:20:10,943
+going to be my first time
+
+427
+00:20:10,943 --> 00:20:12,878
+ever having it on my own but my
+
+428
+00:20:12,878 --> 00:20:14,880
+mom had it before and I tried hers and it
+
+429
+00:20:14,880 --> 00:20:15,914
+was really good. Because
+
+430
+00:20:15,914 --> 00:20:17,716
+mom knows how to order? Yeah
+
+431
+00:20:18,283 --> 00:20:21,019
+I guess so. But right now we are all
+
+432
+00:20:21,019 --> 00:20:24,122
+sitting down on these very small chairs.
+
+433
+00:20:24,489 --> 00:20:25,223
+These chairs are very
+
+434
+00:20:25,257 --> 00:20:28,126
+small and also low to the ground. This is
+
+435
+00:20:28,126 --> 00:20:29,962
+also a very small metal
+
+436
+00:20:29,962 --> 00:20:32,598
+table and you can see there are
+
+437
+00:20:32,698 --> 00:20:35,434
+holes throughout the whole table on the
+
+438
+00:20:35,434 --> 00:20:36,902
+whole surface of the
+
+439
+00:20:36,902 --> 00:20:38,637
+table. This is very Vietnamese
+
+440
+00:20:38,837 --> 00:20:41,073
+because I don't know if you guys have
+
+441
+00:20:41,073 --> 00:20:42,741
+ever seen such low chairs
+
+442
+00:20:42,741 --> 00:20:44,543
+and tables in other countries.
+
+443
+00:20:44,743 --> 00:20:46,745
+Maybe a little bit but not like this
+
+444
+00:20:46,745 --> 00:20:48,714
+much. Yes everywhere. Here it's
+
+445
+00:20:48,714 --> 00:20:49,581
+everywhere everywhere
+
+446
+00:20:50,048 --> 00:20:52,384
+but yeah so on the table there is also
+
+447
+00:20:52,384 --> 00:20:54,686
+this basket with napkins.
+
+448
+00:20:54,686 --> 00:20:56,121
+This is just a very small
+
+449
+00:20:56,455 --> 00:20:59,057
+woven basket. It's just plastic. Over
+
+450
+00:20:59,057 --> 00:21:00,559
+here you have a sign that
+
+451
+00:21:00,559 --> 00:21:02,361
+says no pet. Should be no pets
+
+452
+00:21:02,361 --> 00:21:04,730
+but yeah no pet and this right here is a
+
+453
+00:21:04,730 --> 00:21:06,298
+red sign with a cross
+
+454
+00:21:06,298 --> 00:21:07,799
+through it. That's like a universal
+
+455
+00:21:07,899 --> 00:21:10,202
+symbol for whatever the item is
+
+456
+00:21:10,202 --> 00:21:11,069
+not allowed. So
+
+457
+00:21:11,069 --> 00:21:12,070
+yeah we just ordered
+
+458
+00:21:12,070 --> 00:21:14,272
+our food through the QR code. It brought
+
+459
+00:21:14,272 --> 00:21:15,340
+us to the website and now
+
+460
+00:21:15,340 --> 00:21:16,308
+we're just waiting. So I think
+
+461
+00:21:16,541 --> 00:21:18,810
+over there in the kitchen they are
+
+462
+00:21:18,810 --> 00:21:21,146
+preparing our dessert. You
+
+463
+00:21:21,146 --> 00:21:23,281
+can show them around this store.
+
+464
+00:21:23,682 --> 00:21:25,150
+Pretty empty. There's just one other
+
+465
+00:21:25,150 --> 00:21:27,419
+customer in here. Overall
+
+466
+00:21:27,419 --> 00:21:29,521
+empty. I'm excited to eat this
+
+467
+00:21:29,521 --> 00:21:31,590
+dessert because when I tried my mom's it
+
+468
+00:21:31,590 --> 00:21:34,326
+was really good. So yeah so this right
+
+469
+00:21:34,326 --> 00:21:35,927
+here is crushed ice.
+
+470
+00:21:36,161 --> 00:21:38,130
+This is crushed ice. So now my mom's
+
+471
+00:21:38,130 --> 00:21:40,399
+gonna put the ice on the dessert. She
+
+472
+00:21:40,399 --> 00:21:41,633
+just put a spoon for me,
+
+473
+00:21:41,667 --> 00:21:43,735
+a spoon for herself, another spoon for
+
+474
+00:21:43,735 --> 00:21:46,371
+herself, another spoon for Leon. We have
+
+475
+00:21:46,371 --> 00:21:47,773
+three bowls. We each
+
+476
+00:21:47,773 --> 00:21:50,876
+have our own. It looks pretty good. I
+
+477
+00:21:50,876 --> 00:21:51,943
+don't know if you're supposed to stir
+
+478
+00:21:51,943 --> 00:21:52,944
+this or just like eat it
+
+479
+00:21:52,944 --> 00:21:54,946
+like that but I believe this is like some
+
+480
+00:21:54,946 --> 00:21:56,248
+sort of caramel flan. Is
+
+481
+00:21:56,248 --> 00:21:58,583
+it good? Look at the little
+
+482
+00:21:58,583 --> 00:22:01,153
+jelly balls. They're very good. The flan
+
+483
+00:22:01,153 --> 00:22:02,888
+is going to be good too. The flan is
+
+484
+00:22:02,888 --> 00:22:04,156
+quite good. Let me try these
+
+485
+00:22:04,656 --> 00:22:08,760
+balls. Like tapioca. Mm-hmm. Yummy.
+
+486
+00:22:09,261 --> 00:22:10,696
+Overall it's pretty good. I
+
+487
+00:22:10,696 --> 00:22:11,830
+think the one you had before was
+
+488
+00:22:11,830 --> 00:22:13,465
+better because it had fruit. I have mixed
+
+489
+00:22:13,465 --> 00:22:14,433
+fruit. Yes this one has
+
+490
+00:22:14,433 --> 00:22:15,000
+jackfruit. Now we're
+
+491
+00:22:15,000 --> 00:22:15,701
+jackfruit. Now we're
+
+492
+00:22:15,701 --> 00:22:19,304
+walking down this pretty nice alley. You
+
+493
+00:22:19,304 --> 00:22:20,605
+can see there are a lot of
+
+494
+00:22:20,605 --> 00:22:22,107
+restaurants on the side here
+
+495
+00:22:22,107 --> 00:22:24,276
+but there aren't many people eating since
+
+496
+00:22:24,276 --> 00:22:27,145
+it's almost 4 pm. So now
+
+497
+00:22:27,145 --> 00:22:28,413
+we're thinking of going and
+
+498
+00:22:28,413 --> 00:22:30,615
+buying one of these bags here. These
+
+499
+00:22:30,615 --> 00:22:31,750
+three shops in front of us
+
+500
+00:22:31,750 --> 00:22:32,884
+are selling the same bags
+
+501
+00:22:33,051 --> 00:22:36,421
+and I need one for my flight because my
+
+502
+00:22:36,421 --> 00:22:37,322
+mom brought me a lot of
+
+503
+00:22:37,322 --> 00:22:38,590
+stuff from Canada and I don't
+
+504
+00:22:38,590 --> 00:22:41,093
+have room in my suitcase. These right
+
+505
+00:22:41,093 --> 00:22:43,061
+here are crossbody bags.
+
+506
+00:22:43,428 --> 00:22:44,896
+These are all crossbody bags.
+
+507
+00:22:45,130 --> 00:22:46,965
+You can see these ones are a little bit
+
+508
+00:22:46,965 --> 00:22:48,133
+bigger and these ones are
+
+509
+00:22:48,133 --> 00:22:50,368
+smaller and these are more like
+
+510
+00:22:50,402 --> 00:22:52,971
+fanny packs. You also have luggage straps
+
+511
+00:22:52,971 --> 00:22:54,706
+here. Luggage straps or
+
+512
+00:22:54,706 --> 00:22:56,208
+luggage belts and you can also
+
+513
+00:22:56,241 --> 00:22:58,710
+call these messenger bags. These are
+
+514
+00:22:58,710 --> 00:22:59,945
+messenger bags. They have
+
+515
+00:22:59,945 --> 00:23:01,913
+this flap here that closes the bag
+
+516
+00:23:02,247 --> 00:23:04,816
+and you can usually put documents or your
+
+517
+00:23:04,816 --> 00:23:06,384
+computer inside these
+
+518
+00:23:06,384 --> 00:23:08,153
+bags. So I just bought this big
+
+519
+00:23:08,153 --> 00:23:10,122
+canvas bag. It seems to be like some sort
+
+520
+00:23:10,122 --> 00:23:11,356
+of military bag like that
+
+521
+00:23:11,356 --> 00:23:12,524
+type of material and color.
+
+522
+00:23:12,858 --> 00:23:14,259
+But it's heavy-duty because it feels so
+
+523
+00:23:14,259 --> 00:23:14,926
+strong. Yeah it is really
+
+524
+00:23:14,926 --> 00:23:16,428
+heavy-duty and the inside has this
+
+525
+00:23:16,428 --> 00:23:18,330
+like rubber so I'm pretty sure it's also
+
+526
+00:23:18,330 --> 00:23:20,065
+waterproof. But I just bought it because
+
+527
+00:23:20,065 --> 00:23:21,366
+my mom brought a lot
+
+528
+00:23:21,366 --> 00:23:22,834
+of stuff for me from Canada and I don't
+
+529
+00:23:22,834 --> 00:23:23,668
+have enough room in my
+
+530
+00:23:23,668 --> 00:23:25,337
+suitcase so I need another bag,
+
+531
+00:23:25,537 --> 00:23:27,038
+another checked bag but I don't really want
+
+532
+00:23:27,038 --> 00:23:28,273
+to spend like so much
+
+533
+00:23:28,273 --> 00:23:29,307
+money on a suitcase so
+
+534
+00:23:29,474 --> 00:23:32,544
+this is good enough. This cost six and a
+
+535
+00:23:32,544 --> 00:23:33,945
+half dollars and a
+
+536
+00:23:33,945 --> 00:23:35,914
+suitcase they wanted four hundred
+
+537
+00:23:35,914 --> 00:23:37,749
+dollars. This is a pretty good deal.
+
+538
+00:23:37,749 --> 00:23:38,483
+These right here are the
+
+539
+00:23:38,483 --> 00:23:39,885
+handles. These are the handles.
+
+540
+00:23:40,152 --> 00:23:42,754
+The color is like military green. This
+
+541
+00:23:42,754 --> 00:23:45,090
+part right here is the zipper and right
+
+542
+00:23:45,090 --> 00:23:46,391
+now you guys can tell
+
+543
+00:23:46,391 --> 00:23:50,429
+me what I'm doing. I'm zipping up the
+
+544
+00:23:50,429 --> 00:23:52,297
+bag, unzipping the bag.
+
+545
+00:23:52,631 --> 00:23:54,199
+So to zip that is the verb
+
+546
+00:23:54,432 --> 00:23:56,468
+and I want to see it holds air because
+
+547
+00:23:56,468 --> 00:23:58,670
+it's like sealed. It's like watertight
+
+548
+00:23:58,670 --> 00:24:00,038
+seal. I got my new bag
+
+549
+00:24:00,305 --> 00:24:03,074
+and it didn't break the bank so we're
+
+550
+00:24:03,074 --> 00:24:04,509
+happy. Bargain. I like a
+
+551
+00:24:04,509 --> 00:24:06,211
+bargain. Okay guys so we just
+
+552
+00:24:06,211 --> 00:24:08,146
+went into Circle K which is a convenience
+
+553
+00:24:08,146 --> 00:24:09,247
+store and we got a drink
+
+554
+00:24:09,247 --> 00:24:10,415
+because I'm really thirsty
+
+555
+00:24:10,715 --> 00:24:12,551
+and we haven't even been out for that
+
+556
+00:24:12,551 --> 00:24:14,319
+long but I'm already sweating. But you
+
+557
+00:24:14,319 --> 00:24:15,353
+can see there that's
+
+558
+00:24:15,353 --> 00:24:17,255
+my bag right there. I think this is my
+
+559
+00:24:17,255 --> 00:24:18,790
+favorite drink. I really hope it's
+
+560
+00:24:18,790 --> 00:24:19,991
+carbonated electrolytes
+
+561
+00:24:20,025 --> 00:24:21,593
+and it's not just like really unhealthy.
+
+562
+00:24:22,194 --> 00:24:23,295
+That's what my mom said it
+
+563
+00:24:23,295 --> 00:24:24,763
+was. I took her word for it.
+
+564
+00:24:24,996 --> 00:24:27,966
+Poor mom. Blame it on her. Who's talking?
+
+565
+00:24:28,667 --> 00:24:29,968
+Can you hear that? Your
+
+566
+00:24:29,968 --> 00:24:32,170
+camerawoman today. Where's the
+
+567
+00:24:32,170 --> 00:24:34,239
+cameraman? He left us. Now we're gonna
+
+568
+00:24:34,239 --> 00:24:35,440
+walk to Silk Street because
+
+569
+00:24:35,440 --> 00:24:36,908
+I want to buy another silk
+
+570
+00:24:36,908 --> 00:24:38,810
+bandana so we're gonna head over to Silk
+
+571
+00:24:38,810 --> 00:24:40,979
+Street and see what we can find.
+
+572
+00:24:41,480 --> 00:24:42,380
+Hopefully something good.
+
+573
+00:24:42,747 --> 00:24:45,517
+Okay so right now we are in a silk shop
+
+574
+00:24:45,517 --> 00:24:47,752
+and all these clothes are
+
+575
+00:24:47,752 --> 00:24:49,654
+made out of silk. I bought a
+
+576
+00:24:49,688 --> 00:24:52,290
+silk hair tie for my hair but they also
+
+577
+00:24:52,290 --> 00:24:54,693
+sell silk dresses and silk
+
+578
+00:24:54,693 --> 00:24:56,194
+bandanas. Okay so we have our
+
+579
+00:24:56,194 --> 00:24:57,395
+bandanas. Okay so we have our
+
+580
+00:24:57,596 --> 00:24:59,731
+last meal of the day. Another dessert.
+
+581
+00:25:00,031 --> 00:25:01,132
+I've never had durian before
+
+582
+00:25:01,132 --> 00:25:02,567
+but we're trying durian right
+
+583
+00:25:02,567 --> 00:25:04,736
+now. Yes because I've never tried it
+
+584
+00:25:04,736 --> 00:25:06,471
+either. I'll hold it. You try as well?
+
+585
+00:25:06,471 --> 00:25:07,439
+Okay. I don't even know
+
+586
+00:25:07,439 --> 00:25:08,673
+how you would eat this. I don't know
+
+587
+00:25:08,673 --> 00:25:10,842
+either. I'm just going to dig in. Durian
+
+588
+00:25:10,842 --> 00:25:11,910
+and ice cream. Solid.
+
+589
+00:25:12,177 --> 00:25:15,046
+What if I don't like it? It's a lot. You
+
+590
+00:25:15,046 --> 00:25:18,917
+ordered a lot. There is a seed inside.
+
+591
+00:25:19,150 --> 00:25:20,619
+It's creamy. It's very
+
+592
+00:25:20,619 --> 00:25:23,421
+flavorful. I like it but there's very few
+
+593
+00:25:23,421 --> 00:25:25,056
+things I don't like so. The
+
+594
+00:25:25,056 --> 00:25:25,891
+way people make it sound like
+
+595
+00:25:25,991 --> 00:25:27,792
+it's the worst. it's definitely not
+
+596
+00:25:27,792 --> 00:25:29,194
+like it. It doesn't stink that bad. It
+
+597
+00:25:29,194 --> 00:25:29,828
+doesn't make sense and
+
+598
+00:25:29,828 --> 00:25:30,629
+it doesn't smell like it. It doesn't
+
+599
+00:25:30,629 --> 00:25:31,363
+But it's not bad either. I think it's
+
+600
+00:25:31,363 --> 00:25:33,031
+yummy. Maybe with the ice cream it's even
+
+601
+00:25:33,031 --> 00:25:34,366
+better but. Yeah so I
+
+602
+00:25:34,399 --> 00:25:36,101
+would say the heat is not really
+
+603
+00:25:36,101 --> 00:25:37,736
+necessary. It's creamy. I've seen people
+
+604
+00:25:37,736 --> 00:25:39,371
+gag when eating it. I don't
+
+605
+00:25:39,371 --> 00:25:41,106
+know what's up with that. They're acting.
+
+606
+00:25:41,106 --> 00:25:42,407
+But gagging when you
+
+607
+00:25:42,407 --> 00:25:43,909
+eat it? No. Absolutely not.
+
+608
+00:25:44,209 --> 00:25:47,979
+It's disrespectful first of all. And even
+
+609
+00:25:47,979 --> 00:25:48,780
+the smell people are
+
+610
+00:25:48,780 --> 00:25:50,048
+like oh it smells so strong.
+
+611
+00:25:50,315 --> 00:25:52,384
+It doesn't. I could actually bite you to
+
+612
+00:25:52,384 --> 00:25:52,918
+the big one.
+
+613
+00:25:52,918 --> 00:25:53,618
+Okay well let me just
+
+614
+00:25:53,618 --> 00:25:55,220
+give it. The spoon is not very strong.
+
+615
+00:25:55,654 --> 00:25:57,455
+It's not my favorite but it's not that
+
+616
+00:25:57,455 --> 00:25:59,024
+bad. No. It's nice and
+
+617
+00:25:59,057 --> 00:26:00,492
+creamy. So now Leon is eating it. It's
+
+618
+00:26:00,492 --> 00:26:01,359
+that's the fruit we just tried.
+
+619
+00:26:01,359 --> 00:26:01,693
+that's the fruit we just tried.
+            `
+        },
+        {
+            title: "Bài mẫu 2: Thói quen hằng ngày",
+            youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            subtitles: `
+1
+00:00:01,000 --> 00:00:05,000
+Practice makes perfect every single day.
+
+2
+00:00:05,000 --> 00:00:10,000
+Learning a new language opens up your world.
+            `
+        }
+        // Để thêm bài 3, anh chỉ cần thêm dấu phẩy [,] sau dấu ngoặc nhọn bài 2 rồi dán cấu trúc tương tự vào.
+    ];
+    // -------------------------------------------------------------
+
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var player;
+    var subtitles = [];
+    var currentSubIndex = 0;
+    var loopIntervalTimer;
+    var isScriptHidden = false;
+    var isPlayerReady = false;
+
+    // Khởi tạo danh sách bài học lên giao diện khi mở trang web
+    window.onload = function() {
+        var select = document.getElementById('lessonSelect');
+        select.innerHTML = "";
+        DANH_SACH_BAI_HOC.forEach(function(lesson, index) {
+            var opt = document.createElement('option');
+            opt.value = index;
+            opt.innerText = lesson.title;
+            select.appendChild(opt);
+        });
+    };
+
+    function getYouTubeId(url) {
+        var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        var match = url.match(regExp);
+        return (match && match[2].length == 11) ? match[2] : null;
+    }
+
+    function onYouTubeIframeAPIReady() {
+        // Chờ người dùng chọn bài học hoặc tự nạp bài đầu tiên
+        changeLesson();
+    }
+
+    function changeLesson() {
+        var lessonIndex = document.getElementById('lessonSelect').value;
+        var lesson = DANH_SACH_BAI_HOC[lessonIndex];
+        var videoId = getYouTubeId(lesson.youtubeUrl);
+
+        if (!videoId) return;
+
+        subtitles = parseSrt(lesson.subtitles);
+        currentSubIndex = 0;
+        displaySubtitles();
+
+        document.getElementById('userInput').value = "";
+        document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
+
+        if (player && isPlayerReady) {
+            player.loadVideoById(videoId);
+        } else {
+            player = new YT.Player('player', {
+                height: '100%',
+                width: '100%',
+                videoId: videoId,
+                playerVars: {
+                    'playsinline': 1,
+                    'cc_load_policy': 0,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': function() { 
+                        isPlayerReady = true; 
+                        if (subtitles.length > 0) selectSentence(0);
+                    },
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+    }
+
+    function onPlayerStateChange(event) {
+        var btn = document.getElementById('playPauseBtn');
+        if (event.data == YT.PlayerState.PLAYING) {
+            btn.innerHTML = "⏸ Tạm dừng";
+            startLoopTracker();
+        } else {
+            btn.innerHTML = "▶ Tiếp tục phát";
+            clearInterval(loopIntervalTimer);
+        }
+    }
+
+    function timeToSeconds(timeString) {
+        var parts = timeString.split(':');
+        var secondsParts = parts[2].split(',');
+        var hours = parseInt(parts[0], 10);
+        var minutes = parseInt(parts[1], 10);
+        var seconds = parseInt(secondsParts[0], 10);
+        var milliseconds = parseInt(secondsParts[1], 10);
+        return (hours * 3600) + (minutes * 60) + seconds + (milliseconds / 1000);
+    }
+
+    function parseSrt(data) {
+        var srtClean = data.replace(/\r/g, '').trim();
+        var sections = srtClean.split('\n\n');
+        var parsed = [];
+
+        sections.forEach(function(section) {
+            var lines = section.split('\n');
+            if (lines.length >= 3) {
+                var timeLine = lines[1];
+                var textLines = lines.slice(2).join(' ');
+                var timeMatch = timeLine.match(/(\d+:\d+:\d+,\d+)\s+-->\s+(\d+:\d+:\d+,\d+)/);
+                
+                if (timeMatch) {
+                    parsed.push({
+                        start: timeToSeconds(timeMatch[1]),
+                        end: timeToSeconds(timeMatch[2]),
+                        text: textLines.trim()
+                    });
+                }
+            }
+        });
+        return parsed;
+    }
+
+    function displaySubtitles() {
+        var listContainer = document.getElementById('subtitleList');
+        listContainer.innerHTML = "";
+        
+        subtitles.forEach(function(sub, index) {
+            var item = document.createElement('div');
+            item.className = "subtitle-item";
+            item.id = "sub-item-" + index;
+            
+            var displayText = isScriptHidden ? "••••••••••••••••••••" : sub.text;
+            
+            item.innerHTML = `<span>Câu ${index + 1}: ${displayText}</span> <span style="color: #64748b; font-size:11px;">(${sub.start.toFixed(1)}s)</span>`;
+            item.onclick = function() { selectSentence(index); };
+            listContainer.appendChild(item);
+        });
+        
+        // Giữ trạng thái active trực quan
+        var activeItem = document.getElementById("sub-item-" + currentSubIndex);
+        if (activeItem) activeItem.className = "subtitle-item active";
+    }
+
+    function selectSentence(index) {
+        if (index < 0 || index >= subtitles.length) return;
+        
+        currentSubIndex = index;
+        
+        var items = document.querySelectorAll('.subtitle-item');
+        items.forEach(function(item) { item.className = "subtitle-item"; });
+        var activeItem = document.getElementById("sub-item-" + index);
+        if (activeItem) {
+            activeItem.className = "subtitle-item active";
+            activeItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+
+        document.getElementById('userInput').value = "";
+        document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
+
+        if (player && typeof player.seekTo === 'function') {
+            player.seekTo(subtitles[currentSubIndex].start, true);
+            player.playVideo();
+        }
+    }
+
+    function startLoopTracker() {
+        clearInterval(loopIntervalTimer);
+        loopIntervalTimer = setInterval(function() {
+            if (subtitles.length === 0 || !player || typeof player.getCurrentTime !== 'function') return;
+            
+            var currentTime = player.getCurrentTime();
+            var currentSub = subtitles[currentSubIndex];
+            var isLoopChecked = document.getElementById('autoLoopCheck').checked;
+
+            if (isLoopChecked && currentTime >= currentSub.end) {
+                player.seekTo(currentSub.start, true);
+            }
+        }, 100);
+    }
+
+    function rewindSentence() {
+        if (subtitles.length > 0 && player && typeof player.seekTo === 'function') {
+            player.seekTo(subtitles[currentSubIndex].start, true);
+            player.playVideo();
+        }
+    }
+
+    function nextSentence() {
+        if (subtitles.length > 0 && currentSubIndex + 1 < subtitles.length) {
+            selectSentence(currentSubIndex + 1);
+        } else {
+            alert("Anh đã học hết các câu của bài này rồi!");
+        }
+    }
+
+    function togglePlay() {
+        if (!player || typeof player.getPlayerState !== 'function') return;
+        if (player.getPlayerState() == YT.PlayerState.PLAYING) {
+            player.pauseVideo();
+        } else {
+            player.playVideo();
+        }
+    }
+
+    function toggleScriptVisibility() {
+        isScriptHidden = !isScriptHidden;
+        var toggleBtn = document.getElementById('toggleScriptBtn');
+        if (isScriptHidden) {
+            toggleBtn.innerHTML = "👁️ Hiện đáp án danh sách";
+            toggleBtn.style.backgroundColor = "#2563eb";
+        } else {
+            toggleBtn.innerHTML = "👁️ Ẩn đáp án danh sách";
+            toggleBtn.style.backgroundColor = "#64748b";
+        }
+        displaySubtitles();
+    }
+
+    function cleanWord(word) {
+        if(!word) return "";
+        return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"]/g,"").toLowerCase().trim();
+    }
+
+    function checkAnswers() {
+        if (subtitles.length === 0) return;
+
+        var userText = document.getElementById('userInput').value.trim();
+        var correctText = subtitles[currentSubIndex].text;
+        
+        var userWords = userText ? userText.split(/\s+/) : [];
+        var correctWords = correctText.split(/\s+/);
+        var resultHtml = "";
+
+        for (var i = 0; i < correctWords.length; i++) {
+            if (i < userWords.length) {
+                if (cleanWord(userWords[i]) === cleanWord(correctWords[i])) {
+                    resultHtml += "<span class='word-correct'>" + correctWords[i] + "</span> ";
+                } else {
+                    resultHtml += "<span class='word-incorrect'>" + userWords[i] + "</span> " + "<span style='color:#64748b; font-size:13px; margin-right:8px;'>(" + correctWords[i] + ")</span>";
+                }
+            } else {
+                resultHtml += "<span style='color: #cbd5e1;'>_ </span>";
+            }
+        }
+        document.getElementById('resultDisplay').innerHTML = resultHtml;
+    }
+
+    function giveHint() {
+        if (subtitles.length === 0) return;
+
+        var userText = document.getElementById('userInput').value.trim();
+        var correctText = subtitles[currentSubIndex].text;
+
+        var userWords = userText ? userText.split(/\s+/) : [];
+        var correctWords = correctText.split(/\s+/);
+
+        var nextWordIndex = userWords.length;
+        if (nextWordIndex < correctWords.length) {
+            var nextWord = correctWords[nextWordIndex];
+            document.getElementById('userInput').value = (userText + " " + nextWord).trim();
+        }
+    }
+
+    function searchIPA() {
+        var word = document.getElementById('ipaInput').value.trim();
+        var resultDiv = document.getElementById('ipaResult');
+        
+        if (!word) {
+            resultDiv.innerHTML = "Vui lòng nhập từ.";
+            return;
+        }
+
+        resultDiv.innerHTML = "🔄 Đang tra...";
+
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord(word)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data[0]) {
+                    var phonetic = data[0].phonetic || "";
+                    if (!phonetic && data[0].phonetics) {
+                        for (var p of data[0].phonetics) {
+                            if (p.text) { phonetic = p.text; break; }
+                        }
+                    }
+                    if (phonetic) {
+                        if (!phonetic.startsWith('/')) phonetic = '/' + phonetic;
+                        if (!phonetic.endsWith('/')) phonetic = phonetic + '/';
+                        resultDiv.innerHTML = `IPA của <strong>${word}</strong> là: <span style="color: #2563eb; font-size: 16px;">${phonetic}</span>`;
+                    } else {
+                        resultDiv.innerHTML = `Tìm thấy từ nhưng chưa có sẵn ký tự IPA.`;
+                    }
+                } else {
+                    resultDiv.innerHTML = "❌ Không tìm thấy từ này.";
+                }
+            })
+            .catch(err => { resultDiv.innerHTML = "⚠️ Lỗi kết nối từ điển."; });
+    }
+
+    // Vẫn giữ hệ thống phím tắt phòng khi anh học trên máy tính PC
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey) {
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            else if (e.code === 'ArrowUp') { e.preventDefault(); rewindSentence(); }
+            else if (e.code === 'ArrowRight') { e.preventDefault(); nextSentence(); }
+        }
+    });
+</script>
+
+</body>
+</html>
