@@ -1133,7 +1133,7 @@ Learning a new language opens up your world.
 
         document.getElementById('userInput').value = "";
         document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
-
+        if(document.getElementById('sentenceIpaDisplay')) document.getElementById('sentenceIpaDisplay').innerHTML = "";
         if (player && isPlayerReady) {
             player.loadVideoById(videoId);
         } else {
@@ -1395,6 +1395,14 @@ Learning a new language opens up your world.
             }
         }
         document.getElementById('resultDisplay').innerHTML = resultHtml;
+        // CHÈN THÊM VÀO ĐÂY: Nếu người dùng gõ đúng hoàn toàn (Không chứa từ sai gạch ngang)
+        if (userText && !resultHtml.includes('word-incorrect') && !resultHtml.includes('_')) {
+            getSentenceIPA(correctText);
+        } else {
+            // Nếu gõ chưa đúng hoặc chưa gõ xong thì ẩn dòng IPA câu đi
+            var oldIpa = document.getElementById('sentenceIpaDisplay');
+            if (oldIpa) oldIpa.innerHTML = "";
+        }
     }
 
     function giveHint() {
@@ -1456,6 +1464,88 @@ Learning a new language opens up your world.
             else if (e.code === 'ArrowRight') { e.preventDefault(); nextSentence(); }
         }
     });
+    // --- ĐOẠN CODE VIẾT THÊM: TỰ ĐỘNG HIỂN THỊ IPA KHI TRẢ LỜI ĐÚNG ---
+function getSentenceIPA(sentenceText) {
+    // Tạo hoặc tìm ô chứa hiển thị IPA câu dưới khung kết quả
+    var resultDisplay = document.getElementById('resultDisplay');
+    var ipaDiv = document.getElementById('sentenceIpaDisplay');
+    
+    if (!ipaDiv) {
+        ipaDiv = document.createElement('div');
+        ipaDiv.id = 'sentenceIpaDisplay';
+        ipaDiv.style.marginTop = '10px';
+        ipaDiv.style.padding = '10px';
+        ipaDiv.style.backgroundColor = '#f0fdf4';
+        ipaDiv.style.border = '1px solid #bbf7d0';
+        ipaDiv.style.borderRadius = '8px';
+        ipaDiv.style.fontSize = '15px';
+        ipaDiv.style.color = '#166534';
+        ipaDiv.style.lineHeight = '1.5';
+        resultDisplay.parentNode.insertBefore(ipaDiv, resultDisplay.nextSibling);
+    }
+    
+    ipaDiv.innerHTML = "🔄 Đang tải phiên âm IPA (AmE)...";
+    
+    // Làm sạch câu, bỏ dấu câu và tách thành mảng từ
+    var cleanSentence = sentenceText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"]/g,"");
+    var words = cleanSentence.toLowerCase().split(/\s+/).filter(Boolean);
+    
+    var ipaResults = new Array(words.length);
+    var completedRequests = 0;
+
+    if (words.length === 0) {
+        ipaDiv.innerHTML = "";
+        return;
+    }
+
+    words.forEach(function(word, index) {
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+            .then(response => response.json())
+            .then(data => {
+                var phonetic = "";
+                if (data && data[0]) {
+                    // Ưu tiên tìm phiên âm giọng Mỹ (thường chứa ký tự AmE hoặc us)
+                    if (data[0].phonetics && data[0].phonetics.length > 0) {
+                        // Tìm cụ thể audio/phonetic giọng US nếu có
+                        var usPhonetic = data[0].phonetics.find(p => p.audio && p.audio.includes('-us'));
+                        if (usPhonetic && usPhonetic.text) {
+                            phonetic = usPhonetic.text;
+                        } else {
+                            // Nếu không tách rõ US, lấy cái text đầu tiên tìm được
+                            for (var p of data[0].phonetics) {
+                                if (p.text) { phonetic = p.text; break; }
+                            }
+                        }
+                    }
+                    if (!phonetic && data[0].phonetic) {
+                        phonetic = data[0].phonetic;
+                    }
+                }
+                
+                // Chuẩn hóa xóa dấu gạch chéo dư thừa để ghép câu gọn hơn
+                if (phonetic) {
+                    phonetic = phonetic.replace(/\//g, "");
+                } else {
+                    phonetic = word; // Nếu từ điển không có, giữ nguyên mặt chữ
+                }
+                
+                ipaResults[index] = phonetic;
+                checkComplete();
+            })
+            .catch(err => {
+                ipaResults[index] = word;
+                checkComplete();
+            });
+    });
+
+    function checkComplete() {
+        completedRequests++;
+        if (completedRequests === words.length) {
+            // Ghép các từ lại thành chuỗi IPA hoàn chỉnh bọc trong dấu / /
+            ipaDiv.innerHTML = `🇺🇸 <strong>IPA (AmE):</strong> <span style="font-family: 'Segoe UI'; font-size: 16px; color: #2563eb;">/${ipaResults.join(" ")}/</span>`;
+        }
+    }
+}
 </script>
 
 </body>
