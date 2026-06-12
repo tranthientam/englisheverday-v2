@@ -280,7 +280,7 @@
     </div>
 
     <div class="controls-grid">
-        <button onclick="rewindSentence()">🔄 Nghe lại<br><small>(Ctrl+Up)</small></button>
+        <button id="rewindBtn" onclick="toggleSingleSentenceLoop()">🔄 Nghe lại<br><small>(Ctrl+Up)</small></button>
         <button id="playPauseBtn" onclick="togglePlay()" style="background-color: var(--primary); color: white;">⏸️ Tạm dừng<br><small>(Ctrl+Space)</small></button>
         <button onclick="nextSentence()">⏭️ Câu tiếp<br><small>(Ctrl+Right)</small></button>
     </div>
@@ -353,14 +353,10 @@ This latch will stop the door from opening and this right here is a deadbolt loc
 This is my key card. My key card.
 
 10
-00:00:51,100 --> 00:00:54,000
-This is used to open the door.
-
-11
 00:01:00,000 --> 00:01:05,000
 Now I'm sure you're probably wondering and thinking to yourself what is in my hand
 
-12
+11
 00:01:05,100 --> 00:01:07,500
 I'm about to show you.
 `
@@ -388,10 +384,15 @@ Learning a new language opens up your world.
     var timeCheckInterval;
     var showSubtitle = true;
 
+    // Quản lý biến phát lặp loạt câu
     var customPlayQueue = [];
     var isCustomPlaying = false;
-    var currentQueueIndex = 0; // Lưu chỉ số câu hiện tại trong chuỗi phát loạt câu
-    var customTimeoutId = null; // Quản lý bộ đếm thời gian chuyển câu an toàn
+    var currentQueueIndex = 0;
+    var customTimeoutId = null;
+
+    // Quản lý biến phát lặp 1 câu liên tục
+    var isSingleLooping = false;
+    var singleLoopTimeoutId = null;
 
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
@@ -449,7 +450,7 @@ Learning a new language opens up your world.
     }
 
     function changeLesson() {
-        stopCustomLoop(); // Tắt loạt câu nếu đổi bài
+        stopAllLoops();
         var select = document.getElementById('lessonSelect');
         currentLessonIndex = parseInt(select.value, 10);
         var lesson = DANH_SACH_BAI_HOC[currentLessonIndex];
@@ -534,7 +535,7 @@ Learning a new language opens up your world.
 
     function selectSentence(index) {
         if (index < 0 || index >= currentSubtitles.length) return;
-        stopCustomLoop(); // Dừng loạt câu nếu can thiệp chọn câu thủ công
+        stopAllLoops(); 
 
         currentSentenceIndex = index;
         var sub = currentSubtitles[index];
@@ -556,7 +557,8 @@ Learning a new language opens up your world.
                 var sub = currentSubtitles[currentSentenceIndex];
                 
                 if (sub && currentTime >= sub.end) {
-                    if (!isCustomPlaying) {
+                    // Nếu không chạy bất cứ chế độ lặp đặc biệt nào, kết thúc câu sẽ nhảy tua lại từ đầu câu để chờ gõ
+                    if (!isCustomPlaying && !isSingleLooping) {
                         player.pauseVideo();
                         player.seekTo(sub.start, true);
                     }
@@ -566,7 +568,7 @@ Learning a new language opens up your world.
     }
 
     function togglePlay() {
-        if (isCustomPlaying) stopCustomLoop(); // Tắt lặp loạt câu nếu ấn tạm dừng chung
+        if (isCustomPlaying || isSingleLooping) stopAllLoops(); 
         if (!player || typeof player.getPlayerState !== 'function') return;
         if (isPlaying) {
             player.pauseVideo();
@@ -576,12 +578,16 @@ Learning a new language opens up your world.
     }
 
     function rewindSentence() {
-        if (isCustomPlaying) stopCustomLoop();
-        selectSentence(currentSentenceIndex);
+        // Hàm chạy khi dùng phím tắt Ctrl+Up
+        if (isSingleLooping) {
+            stopSingleSentenceLoop();
+        } else {
+            selectSentence(currentSentenceIndex);
+        }
     }
 
     function nextSentence() {
-        if (isCustomPlaying) stopCustomLoop();
+        stopAllLoops();
         if (currentSentenceIndex < currentSubtitles.length - 1) {
             selectSentence(currentSentenceIndex + 1);
         } else {
@@ -590,7 +596,7 @@ Learning a new language opens up your world.
     }
 
     function prevSentence() {
-        if (isCustomPlaying) stopCustomLoop();
+        stopAllLoops();
         if (currentSentenceIndex > 0) {
             selectSentence(currentSentenceIndex - 1);
         }
@@ -668,7 +674,7 @@ Learning a new language opens up your world.
                 } else if (uW && !cW) {
                     resultHtml += `<span class="word-incorrect">${uW}</span> `;
                 } else if (!uW && cW) {
-                    resultHtml += `<span class="word-missing">_${cW}_</span> `;
+                    resultHtml += `<span class="word-missing">_cW_</span> `;
                 }
             }
         }
@@ -766,13 +772,75 @@ Learning a new language opens up your world.
         }
     }
 
-    // XỬ LÝ PHÁT LẶP LOẠT CÂU LIÊN TỤC CHO ANH TRẦN TÂM
+    // ==========================================
+    // CHẾ ĐỘ 1: PHÁT LẶP 1 CÂU LIÊN TỤC (NGHE LẠI)
+    // ==========================================
+    function toggleSingleSentenceLoop() {
+        if (isSingleLooping) {
+            stopSingleSentenceLoop();
+            return;
+        }
+
+        stopCustomLoop(); // Tắt lặp loạt câu nếu đang bật
+
+        if (currentSubtitles.length === 0) return;
+
+        isSingleLooping = true;
+        var btn = document.getElementById('rewindBtn');
+        btn.innerHTML = "⏹️ Dừng lặp câu<br><small>(Ctrl+Up)</small>";
+        btn.style.backgroundColor = "var(--danger)";
+        btn.style.color = "white";
+
+        playSingleSentenceExecution();
+    }
+
+    function playSingleSentenceExecution() {
+        if (!isSingleLooping) return;
+
+        var sub = currentSubtitles[currentSentenceIndex];
+        if (player && typeof player.seekTo === 'function') {
+            player.seekTo(sub.start, true);
+            player.playVideo();
+        }
+
+        var durationMs = (sub.end - sub.start) * 1000;
+
+        if (singleLoopTimeoutId) clearTimeout(singleLoopTimeoutId);
+        
+        // Thời gian dừng cho mỗi lần lặp lại thiết lập chuẩn là 1000ms (1s)
+        singleLoopTimeoutId = setTimeout(function() {
+            if (isSingleLooping) {
+                playSingleSentenceExecution(); 
+            }
+        }, durationMs + 1000); 
+    }
+
+    function stopSingleSentenceLoop() {
+        if (!isSingleLooping) return;
+        isSingleLooping = false;
+        if (singleLoopTimeoutId) clearTimeout(singleLoopTimeoutId);
+
+        var btn = document.getElementById('rewindBtn');
+        btn.innerHTML = "🔄 Nghe lại<br><small>(Ctrl+Up)</small>";
+        btn.style.backgroundColor = "#e2e8f0";
+        btn.style.color = "#334155";
+
+        if (player && typeof player.pauseVideo === 'function') {
+            player.pauseVideo();
+        }
+    }
+
+
+    // ==========================================
+    // CHẾ ĐỘ 2: PHÁT LẶP LOẠT CÂU LIÊN TỤC 
+    // ==========================================
     function playCustomSentences() {
-        // Nếu đang phát loạt câu thì bấm lần nữa sẽ là DỪNG
         if (isCustomPlaying) {
             stopCustomLoop();
             return;
         }
+
+        stopSingleSentenceLoop(); // Tắt lặp 1 câu nếu đang bật
 
         var inputVal = document.getElementById('customReviewInput').value.trim();
         if (!inputVal) {
@@ -805,7 +873,6 @@ Learning a new language opens up your world.
         if (customPlayQueue.length > 0) {
             isCustomPlaying = true;
             
-            // Cập nhật giao diện nút sang trạng thái Dừng (Màu đỏ)
             var btn = document.getElementById('customPlayBtn');
             btn.innerHTML = "⏹️ Dừng nghe loạt câu";
             btn.style.backgroundColor = "var(--danger)";
@@ -820,7 +887,7 @@ Learning a new language opens up your world.
     function playQueueIndex(queueIdx) {
         if (!isCustomPlaying) return;
         
-        // NẾU PHÁT HẾT DANH SÁCH: Tự động quay vòng lại từ đầu câu thứ 1 trong hàng chờ (Lặp vô hạn)
+        // Quay vòng lặp lại vô hạn chuỗi câu
         if (queueIdx >= customPlayQueue.length) {
             currentQueueIndex = 0;
             playQueueIndex(0);
@@ -845,27 +912,24 @@ Learning a new language opens up your world.
             var sub = currentSubtitles[currentSentenceIndex];
             var durationMs = (sub.end - sub.start) * 1000;
             
-            // Xóa bộ đếm cũ nếu có trước khi kích hoạt bộ đếm mới
             if (customTimeoutId) clearTimeout(customTimeoutId);
             
+            // Thời gian nghỉ chuyển câu tăng lên đúng 1000ms (1s) theo yêu cầu
             customTimeoutId = setTimeout(function() {
                 if (isCustomPlaying) {
                     playQueueIndex(currentQueueIndex + 1);
                 }
-            }, durationMs + 800); // Thêm khoảng nghỉ 800ms giữa các câu nghe cho thoải mái
+            }, durationMs + 1000); 
         } else {
-            // Nếu số câu vượt quá dữ liệu thật thì nhảy qua câu tiếp theo trong hàng chờ
             playQueueIndex(currentQueueIndex + 1);
         }
     }
 
-    // Hàm dùng chung để tắt chế độ phát lặp loạt câu một cách an toàn
     function stopCustomLoop() {
         if (!isCustomPlaying) return;
         isCustomPlaying = false;
         if (customTimeoutId) clearTimeout(customTimeoutId);
         
-        // Trả nút về màu xanh ban đầu
         var btn = document.getElementById('customPlayBtn');
         btn.innerHTML = "🔁 Nghe loạt câu";
         btn.style.backgroundColor = "#10b981";
@@ -873,6 +937,12 @@ Learning a new language opens up your world.
         if (player && typeof player.pauseVideo === 'function') {
             player.pauseVideo();
         }
+    }
+
+    // Bộ dọn dẹp tắt tất cả lặp khi bấm nút chuyển hướng khác
+    function stopAllLoops() {
+        stopSingleSentenceLoop();
+        stopCustomLoop();
     }
 
     function searchIPA() {
@@ -908,7 +978,7 @@ Learning a new language opens up your world.
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey) {
             if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
-            else if (e.code === 'ArrowUp') { e.preventDefault(); rewindSentence(); }
+            else if (e.code === 'ArrowUp') { e.preventDefault(); toggleSingleSentenceLoop(); } // Chuyển đổi phím tắt lên thành công tắc lặp 1 câu
             else if (e.code === 'ArrowRight') { e.preventDefault(); nextSentence(); }
         }
     });
