@@ -255,7 +255,10 @@
         <button class="btn-cyan" onclick="giveHint()">💡 Gợi ý chữ tiếp</button>
         <button class="btn-green" onclick="nextSentence()" style="grid-column: span 2; padding: 12px;">Qua câu tiếp theo ⏭</button>
     </div>
-
+<div style="margin-top: 12px; display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%;">
+    <input type="text" id="customReviewInput" placeholder="Ví dụ: 1,4,5 hoặc 1-5" style="padding: 8px; border: 1px solid var(--border); border-radius: 8px; flex: 1; max-width: 180px; text-align: center; font-size: 14px; height: 38px; box-sizing: border-box;">
+    <button onclick="playCustomSentences()" style="background-color: #10b981; color: white; padding: 0 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; height: 38px; font-weight: bold;">🔁 Nghe loạt câu</button>
+</div>
     <div class="typing-area">
         <textarea id="userInput" placeholder="Nghe và gõ lại câu tại đây..."></textarea>
         
@@ -1456,6 +1459,55 @@ Learning a new language opens up your world.
             else if (e.code === 'ArrowRight') { e.preventDefault(); nextSentence(); }
         }
     });
+    // --- LOGIC PHÁT LẠI LOẠT CÂU THEO CHUỖI TÙY CHỌN ---
+var customPlayQueue = [];
+var isCustomPlaying = false;
+
+function playCustomSentences() {
+    var inputVal = document.getElementById('customReviewInput').value.trim();
+    if (!inputVal) { alert("Anh vui lòng nhập số câu (ví dụ: 1,4,5 hoặc 1-5)"); return; }
+    customPlayQueue = [];
+    var parts = inputVal.split(',');
+    for (var i = 0; i < parts.length; i++) {
+        var part = parts[i].trim();
+        if (part.includes('-')) {
+            var range = part.split('-');
+            var start = parseInt(range[0], 10);
+            var end = parseInt(range[1], 10);
+            if (!isNaN(start) && !isNaN(end) && start <= end) {
+                for (var j = start; j <= end; j++) { customPlayQueue.push(j - 1); }
+            }
+        } else {
+            var num = parseInt(part, 10);
+            if (!isNaN(num)) { customPlayQueue.push(num - 1); }
+        }
+    }
+    if (customPlayQueue.length > 0) {
+        isCustomPlaying = true;
+        playQueueIndex(0);
+    } else {
+        alert("Định dạng nhập chưa đúng, anh kiểm tra lại nhé!");
+    }
+}
+
+function playQueueIndex(queueIdx) {
+    if (!isCustomPlaying || queueIdx >= customPlayQueue.length) {
+        isCustomPlaying = false;
+        return;
+    }
+    var targetSentenceIdx = customPlayQueue[queueIdx];
+    if (targetSentenceIdx >= 0 && targetSentenceIdx < currentSubtitles.length) {
+        currentSentenceIndex = targetSentenceIdx;
+        selectSentence(currentSentenceIndex);
+        var sub = currentSubtitles[currentSentenceIndex];
+        var durationMs = (sub.end - sub.start) * 1000;
+        setTimeout(function() {
+            if (isCustomPlaying) { playQueueIndex(queueIdx + 1); }
+        }, durationMs + 800);
+    } else {
+        playQueueIndex(queueIdx + 1);
+    }
+}
 </script>
 
 </body>
