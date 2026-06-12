@@ -2,8 +2,8 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ứng Dụng Luyện Nghe & Chép Chính Tả YouTube</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Học Tiếng Anh Mỗi Ngày - Luyện Chép Chính Tả</title>
     <style>
         :root {
             --primary: #2563eb;
@@ -12,6 +12,8 @@
             --card: #ffffff;
             --text: #1e293b;
             --border: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
         }
 
         body {
@@ -19,65 +21,47 @@
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .container {
             width: 100%;
-            max-width: 850px;
+            max-width: 650px; /* Tối ưu cho cả màn hình điện thoại đứng */
             background: var(--card);
-            padding: 30px;
+            padding: 15px;
             border-radius: 16px;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.05);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+            box-sizing: border-box;
         }
 
         h2 {
-            margin-top: 0;
+            margin-top: 5px;
+            margin-bottom: 15px;
             color: #0f172a;
             text-align: center;
-            font-size: 24px;
+            font-size: 20px;
         }
 
-        .input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"], input[type="number"] {
-            padding: 14px;
+        select, textarea, input[type="text"] {
+            width: 100%;
+            padding: 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 15px;
+            box-sizing: border-box;
+            background-color: #fff;
         }
 
-        input[type="text"] {
-            flex: 1;
-        }
-
-        button {
-            padding: 14px 24px;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            transition: all 0.2s;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-
-        .main-layout {
-            display: none;
-            flex-direction: column;
-            gap: 20px;
+        .lesson-selector {
+            margin-bottom: 15px;
+            background: #eff6ff;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #bfdbfe;
         }
 
         .video-box {
@@ -88,6 +72,7 @@
             border-radius: 12px;
             background: #000;
             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            margin-bottom: 15px;
         }
 
         .video-box iframe {
@@ -98,80 +83,81 @@
             height: 100%;
         }
 
-        .config-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            background: #f1f5f9;
-            padding: 15px 20px;
+        /* Danh sách câu - thiết kế dạng thẻ dễ bấm trên Android */
+        .subtitle-list {
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 15px;
+            background: #f8fafc;
+            margin-bottom: 15px;
         }
 
-        .config-row {
+        .subtitle-item {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 14px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
         }
 
-        .loop-section {
-            display: flex;
-            align-items: center;
+        .subtitle-item.active {
+            background-color: #dcfce7;
+            border-left: 4px solid var(--success);
+            font-weight: bold;
+            color: #065f46;
+        }
+
+        /* Hệ thống nút điều khiển to rõ cho màn hình cảm ứng */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            width: 100%;
-            border-top: 1px dashed var(--border);
-            padding-top: 10px;
-            margin-top: 5px;
+            margin-bottom: 15px;
         }
 
-        .controls {
+        button {
+            padding: 14px 10px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
             display: flex;
-            gap: 12px;
+            align-items: center;
             justify-content: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
         }
 
-        .btn-secondary {
-            background-color: #475569;
+        button:active {
+            opacity: 0.8;
         }
-        .btn-secondary:hover {
-            background-color: #334155;
-        }
-        .btn-success {
-            background-color: #10b981;
-        }
-        .btn-success:hover {
-            background-color: #059669;
-        }
-        .btn-warning {
-            background-color: #f59e0b;
-        }
-        .btn-warning:hover {
-            background-color: #d97706;
-        }
-        .btn-danger {
-            background-color: #ef4444;
-        }
-        .btn-danger:hover {
-            background-color: #dc2626;
-        }
+
+        .btn-blue { background-color: var(--primary); }
+        .btn-gray { background-color: #475569; }
+        .btn-orange { background-color: #f59e0b; }
+        .btn-cyan { background-color: #06b6d4; }
+        .btn-green { background-color: var(--success); }
+        .btn-warning { background-color: #d97706; }
+        .btn-danger { background-color: #ef4444; }
 
         .typing-area {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         textarea {
-            width: 100%;
-            height: 100px;
-            padding: 15px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
+            height: 80px;
+            resize: none;
             font-size: 16px;
-            line-height: 1.5;
-            resize: vertical;
-            box-sizing: border-box;
+            line-height: 1.4;
+            border: 2px solid var(--border);
         }
 
         textarea:focus {
@@ -179,97 +165,176 @@
             outline: none;
         }
 
-        .guide-box {
-            background-color: #f8fafc;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #475569;
-            line-height: 1.6;
+        .result-display {
+            padding: 12px;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            background: #fafafa;
+            min-height: 24px;
+            font-size: 17px;
+            line-height: 1.5;
+            word-wrap: break-word;
         }
 
-        .guide-box code {
-            background: #e2e8f0;
-            padding: 3px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-            color: #0f172a;
+        .word-correct { color: var(--success); font-weight: bold; margin-right: 4px; }
+        .word-incorrect { color: var(--danger); text-decoration: line-through; font-weight: bold; margin-right: 4px; }
+
+        .ipa-section {
+            background-color: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .checkbox-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .panel-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .loop-segments-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-top: 1px dashed var(--border);
+            padding-top: 10px;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Chép Chính Tả Tiếng Anh Qua YouTube</h2>
+    <h2>Luyện Nghe Chép Chính Tả Đa Thiết Bị</h2>
     
-    <div class="input-group">
-        <input type="text" id="youtubeUrl" placeholder="Dán link video tiếng Anh vào đây...">
-        <button onclick="loadVideo()">Tải Bài Nghe</button>
+    <div class="lesson-selector">
+        <label style="font-weight: bold; font-size: 14px; display: block; margin-bottom: 6px; color: #1e3a8a;">📖 Chọn bài học đã lưu sẵn:</label>
+        <select id="lessonSelect" onchange="changeLesson()">
+            </select>
     </div>
 
-    <div class="main-layout" id="mainLayout">
+    <div class="video-box">
+        <div id="player"></div>
+    </div>
+
+    <div class="checkbox-panel">
+        <div class="panel-row">
+            <label style="cursor: pointer; font-weight: 500;">
+                <input type="checkbox" id="autoLoopCheck" checked> Tự động lặp câu đơn
+            </label>
+            <button type="button" id="toggleScriptBtn" onclick="toggleScriptVisibility()" style="padding: 6px 12px; font-size: 12px; background-color: #64748b;">👁️ Ẩn đáp án danh sách</button>
+        </div>
+
+        <div class="loop-segments-row">
+            <label style="font-weight: bold; font-size: 13px; white-space: nowrap;">Nghe lặp câu số:</label>
+            <input type="text" id="loopSegments" placeholder="Ví dụ: 1,2,3" style="padding: 8px; font-size: 13px; border-radius: 6px; border: 1px solid var(--border); width: 100px;">
+            <button type="button" class="btn-warning" style="padding: 8px 12px; font-size: 12px;" onclick="startSegmentLoop()">🔁 Lặp đoạn</button>
+            <button type="button" class="btn-danger" id="stopLoopBtn" style="padding: 8px 12px; font-size: 12px; display: none;" onclick="stopSegmentLoop()">🛑 Dừng</button>
+            <span id="loopStatus" style="font-size: 12px; color: #2563eb; font-weight: bold;"></span>
+        </div>
+    </div>
+
+    <div class="subtitle-list" id="subtitleList"></div>
+
+    <div class="controls-grid">
+        <button class="btn-gray" onclick="rewindSentence()">⏮ Nghe lại câu</button>
+        <button class="btn-gray" id="playPauseBtn" onclick="togglePlay()">⏸ Tạm dừng</button>
+        <button class="btn-orange" onclick="checkAnswers()">🔍 Kiểm tra đúng sai</button>
+        <button class="btn-cyan" onclick="giveHint()">💡 Gợi ý chữ tiếp</button>
+        <button class="btn-green" onclick="nextSentence()" style="grid-column: span 2; padding: 12px;">Qua câu tiếp theo ⏭</button>
+    </div>
+
+    <div class="typing-area">
+        <textarea id="userInput" placeholder="Nghe và gõ lại câu tại đây..."></textarea>
         
-        <div class="video-box">
-            <div id="player"></div>
-        </div>
+        <div class="result-display" id="resultDisplay">Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.</div>
 
-        <div class="config-panel">
-            <div class="config-row">
-                <label style="font-weight: 500;">
-                    <input type="checkbox" id="autoPauseCheck" onchange="toggleAutoPause()"> Tự động dừng sau mỗi câu ngắn
-                </label>
-                <div id="timeSetting" style="display: none; align-items: center; gap: 5px;">
-                    (Khoảng <input type="number" id="pauseInterval" value="5" min="2" max="30" style="width: 45px; padding: 4px; text-align: center; border-radius: 4px; border: 1px solid var(--border);"> giây)
-                </div>
+        <div class="ipa-section">
+            <div style="display: flex; gap: 6px;">
+                <input type="text" id="ipaInput" placeholder="Nhập từ cần xem IPA..." style="padding: 8px;">
+                <button class="btn-gray" style="padding: 8px 15px; font-size: 13px; white-space: nowrap;" onclick="searchIPA()">Xem IPA</button>
             </div>
-
-            <div class="loop-section">
-                <label style="font-weight: bold; white-space: nowrap;">Nhập đoạn muốn nghe:</label>
-                <input type="text" id="loopSegments" placeholder="Ví dụ: 1,2,3" style="padding: 8px; width: 150px; border-radius: 6px; border: 1px solid var(--border);">
-                <button type="button" class="btn-warning" style="padding: 8px 16px; font-size: 14px;" onclick="startSegmentLoop()">🔁 Bắt đầu nghe lặp đoạn</button>
-                <button type="button" class="btn-danger" id="stopLoopBtn" style="padding: 8px 16px; font-size: 14px; display: none;" onclick="stopSegmentLoop()">🛑 Dừng nghe lặp</button>
-                <span id="loopStatus" style="font-size: 13px; color: #2563eb; font-weight: 500; margin-left: 5px;"></span>
-            </div>
-        </div>
-
-        <div class="controls">
-            <button class="btn-secondary" onclick="rewindSentence()">⏮ Nghe lại câu [Ctrl + Up]</button>
-            <button class="btn-secondary" id="playPauseBtn" onclick="togglePlay()">⏸ Tạm dừng [Ctrl + Space]</button>
-            <button class="btn-success" onclick="nextSentence()">Qua câu tiếp theo [Ctrl + Right] ⏭</button>
-        </div>
-
-        <div class="typing-area">
-            <label style="font-weight: bold;">Nhập lại những gì anh nghe được (Tập trung chính xác từng ký tự):</label>
-            <textarea id="userInput" placeholder="Nghe đến đâu, gõ lại đến đó..."></textarea>
-            
-            <div class="guide-box">
-                <strong>⌨ Phím tắt thông minh khi đang gõ chữ (Không cần chạm chuột):</strong>
-                <div style="margin-top: 5px;">
-                    • <code>Ctrl + Phím Cách (Space)</code>: Tạm dừng hoặc tiếp tục phát video.<br>
-                    • <code>Ctrl + Mũi tên Lên (Up)</code>: Tua lại từ đầu câu hiện tại để kiểm tra lại mặt chữ.<br>
-                    • <code>Ctrl + Mũi tên Phải (Right)</code>: Bắt đầu câu tiếp theo (Hệ thống sẽ tự động xóa chữ cũ để gõ câu mới).
-                </div>
-            </div>
+            <div id="ipaResult" style="margin-top: 8px; font-size: 14px; font-weight: 500; color: #1e3a8a; min-height: 18px;"></div>
         </div>
     </div>
 </div>
 
 <script>
-    // Nhúng YouTube API
+    // --- KHU VỰC CẤU HÌNH: GIỮ NGUYÊN HOÀN TOÀN CẤU TRÚC SRT CHUỖI CŨ CỦA ANH ---
+    var DANH_SACH_BAI_HOC = [
+        {
+            title: "Bài mẫu 1: Khởi động luyện nghe",
+            youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", 
+            subtitles: `
+1
+00:00:00,500 --> 00:00:04,000
+Welcome to your English listening practice.
+
+2
+00:00:04,000 --> 00:00:08,200
+Never give up on your dreams.
+
+3
+00:00:08,200 --> 00:00:12,500
+Practice makes perfect every single day.
+            `
+        },
+        {
+            title: "Bài mẫu 2: Thói quen hằng ngày",
+            youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            subtitles: `
+1
+00:00:01,000 --> 00:00:05,000
+Practice makes perfect every single day.
+
+2
+00:00:05,000 --> 00:00:10,000
+Learning a new language opens up your world.
+            `
+        }
+    ];
+    // -------------------------------------------------------------
+
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
     firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
     var player;
-    var sentenceStartTime = 0;
-    var autoPauseTimer;
+    var subtitles = [];
+    var currentSubIndex = 0;
+    var loopIntervalTimer;
+    var isScriptHidden = false;
+    var isPlayerReady = false;
 
-    // Các biến phục vụ tính năng phát lặp đoạn mới thêm
+    // Các biến phục vụ việc quản lý phát lặp đoạn mới
     var isSegmentLooping = false;
     var segmentQueue = [];
-    var currentSegmentIndex = 0;
+    var currentSegmentQueueIndex = 0;
+
+    // Khởi tạo danh sách bài học lên giao diện khi mở trang web
+    window.onload = function() {
+        var select = document.getElementById('lessonSelect');
+        select.innerHTML = "";
+        DANH_SACH_BAI_HOC.forEach(function(lesson, index) {
+            var opt = document.createElement('option');
+            opt.value = index;
+            opt.innerText = lesson.title;
+            select.appendChild(opt);
+        });
+    };
 
     function getYouTubeId(url) {
         var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -277,20 +342,27 @@
         return (match && match[2].length == 11) ? match[2] : null;
     }
 
-    function loadVideo() {
-        var url = document.getElementById('youtubeUrl').value;
-        var videoId = getYouTubeId(url);
+    function onYouTubeIframeAPIReady() {
+        changeLesson();
+    }
 
-        if (!videoId) {
-            alert('Đường dẫn YouTube không hợp lệ, anh vui lòng kiểm tra lại!');
-            return;
-        }
+    function changeLesson() {
+        var lessonIndex = document.getElementById('lessonSelect').value;
+        var lesson = DANH_SACH_BAI_HOC[lessonIndex];
+        var videoId = getYouTubeId(lesson.youtubeUrl);
 
-        document.getElementById('mainLayout').style.display = 'flex';
+        if (!videoId) return;
 
-        if (player && typeof player.loadVideoById === 'function') {
+        subtitles = parseSrt(lesson.subtitles);
+        currentSubIndex = 0;
+        displaySubtitles();
+        stopSegmentLoop();
+
+        document.getElementById('userInput').value = "";
+        document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
+
+        if (player && isPlayerReady) {
             player.loadVideoById(videoId);
-            resetApp();
         } else {
             player = new YT.Player('player', {
                 height: '100%',
@@ -298,11 +370,14 @@
                 videoId: videoId,
                 playerVars: {
                     'playsinline': 1,
-                    'cc_load_policy': 0, // Tắt phụ đề để ép tai phải nghe
+                    'cc_load_policy': 0,
                     'rel': 0
                 },
                 events: {
-                    'onReady': function() { resetApp(); },
+                    'onReady': function() { 
+                        isPlayerReady = true; 
+                        if (subtitles.length > 0) selectSentence(0);
+                    },
                     'onStateChange': onPlayerStateChange
                 }
             });
@@ -312,35 +387,189 @@
     function onPlayerStateChange(event) {
         var btn = document.getElementById('playPauseBtn');
         if (event.data == YT.PlayerState.PLAYING) {
-            btn.innerHTML = "⏸ Tạm dừng [Ctrl + Space]";
-            startAutoPauseTracker();
+            btn.innerHTML = "⏸ Tạm dừng";
+            startLoopTracker();
         } else {
-            btn.innerHTML = "▶ Tiếp tục phát [Ctrl + Space]";
-            clearInterval(autoPauseTimer);
+            btn.innerHTML = "▶ Tiếp tục phát";
+            clearInterval(loopIntervalTimer);
         }
     }
 
-    function resetApp() {
-        sentenceStartTime = 0;
-        stopSegmentLoop();
+    function timeToSeconds(timeString) {
+        var parts = timeString.split(':');
+        var secondsParts = parts[2].split(',');
+        var hours = parseInt(parts[0], 10);
+        var minutes = parseInt(parts[1], 10);
+        var seconds = parseInt(secondsParts[0], 10);
+        var milliseconds = parseInt(secondsParts[1], 10);
+        return (hours * 3600) + (minutes * 60) + seconds + (milliseconds / 1000);
+    }
+
+    function parseSrt(data) {
+        var srtClean = data.replace(/\r/g, '').trim();
+        var sections = srtClean.split('\n\n');
+        var parsed = [];
+
+        sections.forEach(function(section) {
+            var lines = section.split('\n');
+            if (lines.length >= 3) {
+                var timeLine = lines[1];
+                var textLines = lines.slice(2).join(' ');
+                var timeMatch = timeLine.match(/(\d+:\d+:\d+,\d+)\s+-->\s+(\d+:\d+:\d+,\d+)/);
+                
+                if (timeMatch) {
+                    parsed.push({
+                        start: timeToSeconds(timeMatch[1]),
+                        end: timeToSeconds(timeMatch[2]),
+                        text: textLines.trim()
+                    });
+                }
+            }
+        });
+        return parsed;
+    }
+
+    function displaySubtitles() {
+        var listContainer = document.getElementById('subtitleList');
+        listContainer.innerHTML = "";
+        
+        subtitles.forEach(function(sub, index) {
+            var item = document.createElement('div');
+            item.className = "subtitle-item";
+            item.id = "sub-item-" + index;
+            
+            var displayText = isScriptHidden ? "••••••••••••••••••••" : sub.text;
+            
+            item.innerHTML = `<span>Câu ${index + 1}: ${displayText}</span> <span style="color: #64748b; font-size:11px;">(${sub.start.toFixed(1)}s)</span>`;
+            item.onclick = function() { selectSentence(index); };
+            listContainer.appendChild(item);
+        });
+        
+        var activeItem = document.getElementById("sub-item-" + currentSubIndex);
+        if (activeItem) activeItem.className = "subtitle-item active";
+    }
+
+    function selectSentence(index) {
+        if (index < 0 || index >= subtitles.length) return;
+        
+        currentSubIndex = index;
+        
+        var items = document.querySelectorAll('.subtitle-item');
+        items.forEach(function(item) { item.className = "subtitle-item"; });
+        var activeItem = document.getElementById("sub-item-" + index);
+        if (activeItem) {
+            activeItem.className = "subtitle-item active";
+            activeItem.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+
         document.getElementById('userInput').value = "";
-        document.getElementById('userInput').focus();
+        document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
+
+        if (player && typeof player.seekTo === 'function') {
+            player.seekTo(subtitles[currentSubIndex].start, true);
+            player.playVideo();
+        }
+    }
+
+    // LOGIC KÍCH HOẠT VÒNG LẶP ĐOẠN TÙY CHỌN THEO ĐÚNG SỐ THỨ TỰ SRT
+    function startSegmentLoop() {
+        var inputVal = document.getElementById('loopSegments').value.trim();
+        if (!inputVal) {
+            alert("Anh vui lòng nhập số câu cần nghe (Ví dụ: 1,2,3)!");
+            return;
+        }
+        if (subtitles.length === 0 || !player || typeof player.seekTo !== 'function') {
+            alert("Vui lòng đợi bài nghe được nạp xong.");
+            return;
+        }
+
+        var rawSegments = inputVal.split(',');
+        segmentQueue = [];
+        for (var i = 0; i < rawSegments.length; i++) {
+            var num = parseInt(rawSegments[i].trim(), 10);
+            // Đối chiếu index mảng srt (người dùng gõ câu 1 tức là mảng index 0)
+            if (!isNaN(num) && num > 0 && num <= subtitles.length) {
+                segmentQueue.push(num - 1);
+            }
+        }
+
+        if (segmentQueue.length === 0) {
+            alert("Số thứ tự câu nhập vào không đúng hoặc vượt quá số câu của bài!");
+            return;
+        }
+
+        segmentQueue.sort(function(a, b) { return a - b; });
+
+        // Tắt lặp đơn câu mặc định để tránh tranh chấp
+        document.getElementById('autoLoopCheck').checked = false;
+        
+        isSegmentLooping = true;
+        currentSegmentQueueIndex = 0;
+        document.getElementById('stopLoopBtn').style.display = 'inline-block';
+
+        playSelectedSegmentQueue();
+    }
+
+    function playSelectedSegmentQueue() {
+        if (!isSegmentLooping || segmentQueue.length === 0) return;
+        
+        var targetIndex = segmentQueue[currentSegmentQueueIndex];
+        document.getElementById('loopStatus').innerHTML = " (Đang lặp câu " + (targetIndex + 1) + ")";
+        
+        selectSentence(targetIndex);
+    }
+
+    function stopSegmentLoop() {
+        isSegmentLooping = false;
+        document.getElementById('stopLoopBtn').style.display = 'none';
+        document.getElementById('loopStatus').innerHTML = "";
+    }
+
+    // BỘ GIÁM SÁT THỜI GIAN VÒNG LẶP (ĐÃ GỘP CHUNG AN TOÀN)
+    function startLoopTracker() {
+        clearInterval(loopIntervalTimer);
+        loopIntervalTimer = setInterval(function() {
+            if (subtitles.length === 0 || !player || typeof player.getCurrentTime !== 'function') return;
+            
+            var currentTime = player.getCurrentTime();
+            
+            // Trường hợp 1: Đang kích hoạt lặp đoạn phức hợp (Tính năng mới thêm)
+            if (isSegmentLooping && segmentQueue.length > 0) {
+                var targetIndex = segmentQueue[currentSegmentQueueIndex];
+                var currentSub = subtitles[targetIndex];
+                
+                if (currentTime >= currentSub.end) {
+                    currentSegmentQueueIndex++;
+                    if (currentSegmentQueueIndex >= segmentQueue.length) {
+                        currentSegmentQueueIndex = 0; // Quay về câu đầu tiên trong chuỗi đã chọn
+                    }
+                    playSelectedSegmentQueue();
+                }
+            } 
+            // Trường hợp 2: Chế độ tự động lặp đơn 1 câu (Logic cũ của anh)
+            else {
+                var currentSub = subtitles[currentSubIndex];
+                var isLoopChecked = document.getElementById('autoLoopCheck').checked;
+
+                if (isLoopChecked && currentTime >= currentSub.end) {
+                    player.seekTo(currentSub.start, true);
+                }
+            }
+        }, 100);
     }
 
     function rewindSentence() {
-        if (player && typeof player.seekTo === 'function') {
-            player.seekTo(sentenceStartTime, true);
+        if (subtitles.length > 0 && player && typeof player.seekTo === 'function') {
+            player.seekTo(subtitles[currentSubIndex].start, true);
             player.playVideo();
-            document.getElementById('userInput').focus();
         }
     }
 
     function nextSentence() {
-        if (player && typeof player.getCurrentTime === 'function') {
-            sentenceStartTime = player.getCurrentTime();
-            document.getElementById('userInput').value = "";
-            player.playVideo();
-            document.getElementById('userInput').focus();
+        if (subtitles.length > 0 && currentSubIndex + 1 < subtitles.length) {
+            selectSentence(currentSubIndex + 1);
+        } else {
+            alert("Anh đã học hết các câu của bài này rồi!");
         }
     }
 
@@ -353,123 +582,105 @@
         }
     }
 
-    function toggleAutoPause() {
-        var isChecked = document.getElementById('autoPauseCheck').checked;
-        document.getElementById('timeSetting').style.display = isChecked ? 'flex' : 'none';
+    function toggleScriptVisibility() {
+        isScriptHidden = !isScriptHidden;
+        var toggleBtn = document.getElementById('toggleScriptBtn');
+        if (isScriptHidden) {
+            toggleBtn.innerHTML = "👁️ Hiện đáp án danh sách";
+            toggleBtn.style.backgroundColor = "#2563eb";
+        } else {
+            toggleBtn.innerHTML = "👁️ Ẩn đáp án danh sách";
+            toggleBtn.style.backgroundColor = "#64748b";
+        }
+        displaySubtitles();
     }
 
-    // XỬ LÝ LOGIC PHÁT LẶP ĐOẠN ĐƯỢC CHỌN VÔ THỜI HẠN
-    function startSegmentLoop() {
-        var inputVal = document.getElementById('loopSegments').value.trim();
-        if (!inputVal) {
-            alert("Anh vui lòng nhập số đoạn cần nghe (Ví dụ: 1,2,3)!");
-            return;
-        }
+    function cleanWord(word) {
+        if(!word) return "";
+        return word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"]/g,"").toLowerCase().trim();
+    }
 
-        if (!player || typeof player.seekTo !== 'function') {
-            alert("Vui lòng tải bài nghe trước khi bật chế độ lặp đoạn.");
-            return;
-        }
+    function checkAnswers() {
+        if (subtitles.length === 0) return;
 
-        // Bóc tách chuỗi người dùng nhập thành mảng số nguyên
-        var rawSegments = inputVal.split(',');
-        segmentQueue = [];
+        var userText = document.getElementById('userInput').value.trim();
+        var correctText = subtitles[currentSubIndex].text;
         
-        for (var i = 0; i < rawSegments.length; i++) {
-            var num = parseInt(rawSegments[i].trim(), 10);
-            if (!isNaN(num) && num > 0) {
-                segmentQueue.push(num);
+        var userWords = userText ? userText.split(/\s+/) : [];
+        var correctWords = correctText.split(/\s+/);
+        var resultHtml = "";
+
+        for (var i = 0; i < correctWords.length; i++) {
+            if (i < userWords.length) {
+                if (cleanWord(userWords[i]) === cleanWord(correctWords[i])) {
+                    resultHtml += "<span class='word-correct'>" + correctWords[i] + "</span> ";
+                } else {
+                    resultHtml += "<span class='word-incorrect'>" + userWords[i] + "</span> " + "<span style='color:#64748b; font-size:13px; margin-right:8px;'>(" + correctWords[i] + ")</span>";
+                }
+            } else {
+                resultHtml += "<span style='color: #cbd5e1;'>_ </span>";
             }
         }
+        document.getElementById('resultDisplay').innerHTML = resultHtml;
+    }
 
-        if (segmentQueue.length === 0) {
-            alert("Định dạng đoạn nhập vào không hợp lệ. Anh hãy nhập số cách nhau bằng dấu phẩy.");
+    function giveHint() {
+        if (subtitles.length === 0) return;
+
+        var userText = document.getElementById('userInput').value.trim();
+        var correctText = subtitles[currentSubIndex].text;
+
+        var userWords = userText ? userText.split(/\s+/) : [];
+        var correctWords = correctText.split(/\s+/);
+
+        var nextWordIndex = userWords.length;
+        if (nextWordIndex < correctWords.length) {
+            var nextWord = correctWords[nextWordIndex];
+            document.getElementById('userInput').value = (userText + " " + nextWord).trim();
+        }
+    }
+
+    function searchIPA() {
+        var word = document.getElementById('ipaInput').value.trim();
+        var resultDiv = document.getElementById('ipaResult');
+        
+        if (!word) {
+            resultDiv.innerHTML = "Vui lòng nhập từ.";
             return;
         }
 
-        // Sắp xếp thứ tự các đoạn từ nhỏ đến lớn để chạy mạch lạc
-        segmentQueue.sort(function(a, b) { return a - b; });
+        resultDiv.innerHTML = "🔄 Đang tra...";
 
-        // Tự động tắt "Tự động dừng sau mỗi câu ngắn" cũ để tránh xung đột logic lặp
-        document.getElementById('autoPauseCheck').checked = false;
-        toggleAutoPause();
-
-        // Cài đặt trạng thái bắt đầu lặp
-        isSegmentLooping = true;
-        currentSegmentIndex = 0;
-        document.getElementById('stopLoopBtn').style.display = 'inline-block';
-        
-        // Nhảy thẳng tới đoạn đầu tiên được chọn
-        playCurrentSelectedSegment();
-    }
-
-    function playCurrentSelectedSegment() {
-        if (!isSegmentLooping || segmentQueue.length === 0) return;
-
-        var interval = parseFloat(document.getElementById('pauseInterval').value) || 5;
-        var targetSeg = segmentQueue[currentSegmentIndex];
-
-        // Tính mốc thời gian thực tế dựa trên số giây của mỗi đoạn
-        var segStart = (targetSeg - 1) * interval;
-        
-        document.getElementById('loopStatus').innerHTML = " đang lặp đoạn " + targetSeg + " (" + segStart + "s)";
-        
-        sentenceStartTime = segStart; // Cập nhật mốc nghe lại câu cho phím tắt trùng khớp
-        player.seekTo(segStart, true);
-        player.playVideo();
-    }
-
-    function stopSegmentLoop() {
-        isSegmentLooping = false;
-        document.getElementById('stopLoopBtn').style.display = 'none';
-        document.getElementById('loopStatus').innerHTML = "";
-    }
-
-    // Bộ giám sát thời gian tự động dừng câu & Quản lý vòng lặp đoạn vô thời hạn
-    function startAutoPauseTracker() {
-        clearInterval(autoPauseTimer);
-        autoPauseTimer = setInterval(function() {
-            if (!player || typeof player.getCurrentTime !== 'function') return;
-            var currentTime = player.getCurrentTime();
-            var interval = parseFloat(document.getElementById('pauseInterval').value) || 5;
-
-            // LOẠI 1: Nếu đang bật chế độ lặp đoạn tùy chọn (Mới bổ sung)
-            if (isSegmentLooping && segmentQueue.length > 0) {
-                var targetSeg = segmentQueue[currentSegmentIndex];
-                var segEnd = targetSeg * interval;
-
-                if (currentTime >= segEnd) {
-                    currentSegmentIndex++;
-                    // Nếu đã phát hết toàn bộ danh sách đoạn đã chọn, tự động quay lại đoạn đầu tiên (Lặp vô thời hạn)
-                    if (currentSegmentIndex >= segmentQueue.length) {
-                        currentSegmentIndex = 0;
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${cleanWord(word)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data[0]) {
+                    var phonetic = data[0].phonetic || "";
+                    if (!phonetic && data[0].phonetics) {
+                        for (var p of data[0].phonetics) {
+                            if (p.text) { phonetic = p.text; break; }
+                        }
                     }
-                    playCurrentSelectedSegment();
+                    if (phonetic) {
+                        if (!phonetic.startsWith('/')) phonetic = '/' + phonetic;
+                        if (!phonetic.endsWith('/')) phonetic = phonetic + '/';
+                        resultDiv.innerHTML = `IPA của <strong>${word}</strong> là: <span style="color: #2563eb; font-size: 16px;">${phonetic}</span>`;
+                    } else {
+                        resultDiv.innerHTML = `Tìm thấy từ nhưng chưa có sẵn ký tự IPA.`;
+                    }
+                } else {
+                    resultDiv.innerHTML = "❌ Không tìm thấy từ này.";
                 }
-            } 
-            // LOẠI 2: Chế độ tự động dừng mặc định (Gốc cũ của ứng dụng)
-            else {
-                var isChecked = document.getElementById('autoPauseCheck').checked;
-                if (isChecked && (currentTime - sentenceStartTime >= interval)) {
-                    player.pauseVideo();
-                }
-            }
-        }, 200);
+            })
+            .catch(err => { resultDiv.innerHTML = "⚠️ Lỗi kết nối từ điển."; });
     }
 
-    // Xử lý phím tắt tối ưu trên bàn phím
+    // Phím tắt PC cũ của anh
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey) {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                togglePlay();
-            } else if (e.code === 'ArrowUp') {
-                e.preventDefault();
-                rewindSentence();
-            } else if (e.code === 'ArrowRight') {
-                e.preventDefault();
-                nextSentence();
-            }
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            else if (e.code === 'ArrowUp') { e.preventDefault(); rewindSentence(); }
+            else if (e.code === 'ArrowRight') { e.preventDefault(); nextSentence(); }
         }
     });
 </script>
