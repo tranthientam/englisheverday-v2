@@ -86,7 +86,6 @@
             display: block;
         }
 
-        /* Khu vực hiển thị phụ đề tiếng Anh gốc của câu hiện tại */
         .subtitle-box {
             background-color: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -288,7 +287,7 @@
 
     <div style="margin-top: 12px; display: flex; gap: 8px; align-items: center; justify-content: center; width: 100%;">
         <input type="text" id="customReviewInput" placeholder="Ví dụ: 1,4,5 hoặc 1-5" style="padding: 8px; border: 1px solid var(--border); border-radius: 8px; flex: 1; max-width: 180px; text-align: center; font-size: 14px; height: 38px; box-sizing: border-box;">
-        <button onclick="playCustomSentences()" style="background-color: #10b981; color: white; padding: 0 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; height: 38px; font-weight: bold; flex-direction: row; gap: 4px;">🔁 Nghe loạt câu</button>
+        <button id="customPlayBtn" onclick="playCustomSentences()" style="background-color: #10b981; color: white; padding: 0 16px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; height: 38px; font-weight: bold; flex-direction: row; gap: 4px; transition: background-color 0.2s;">🔁 Nghe loạt câu</button>
     </div>
 
     <div class="input-group" style="margin-top: 15px;">
@@ -358,11 +357,11 @@ This is my key card. My key card.
 This is used to open the door.
 
 11
-00:00:54,100 --> 00:01:00,000
+00:01:00,000 --> 00:01:05,000
 Now I'm sure you're probably wondering and thinking to yourself what is in my hand
 
 12
-00:01:00,100 --> 00:01:02,500
+00:01:05,100 --> 00:01:07,500
 I'm about to show you.
 `
         },
@@ -387,12 +386,13 @@ Learning a new language opens up your world.
     var currentLessonIndex = 0;
     var isPlaying = false;
     var timeCheckInterval;
-    var showSubtitle = true; // Biến trạng thái ẩn/hiện phụ đề
+    var showSubtitle = true;
 
     var customPlayQueue = [];
     var isCustomPlaying = false;
+    var currentQueueIndex = 0; // Lưu chỉ số câu hiện tại trong chuỗi phát loạt câu
+    var customTimeoutId = null; // Quản lý bộ đếm thời gian chuyển câu an toàn
 
-    // Tải thư viện YouTube API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -430,7 +430,7 @@ Learning a new language opens up your world.
     }
 
     function onPlayerReady(event) {
-        // Sẵn sàng
+        // Ready
     }
 
     function onPlayerStateChange(event) {
@@ -449,6 +449,7 @@ Learning a new language opens up your world.
     }
 
     function changeLesson() {
+        stopCustomLoop(); // Tắt loạt câu nếu đổi bài
         var select = document.getElementById('lessonSelect');
         currentLessonIndex = parseInt(select.value, 10);
         var lesson = DANH_SACH_BAI_HOC[currentLessonIndex];
@@ -503,7 +504,6 @@ Learning a new language opens up your world.
         return (hours * 3600) + (mins * 60) + secs + (ms / 1000);
     }
 
-    // Hàm thực hiện chuyển đổi trạng thái nút ẩn hiện phụ đề gốc
     function toggleSubtitleVisibility() {
         showSubtitle = !showSubtitle;
         var btn = document.getElementById('toggleSubBtn');
@@ -517,7 +517,6 @@ Learning a new language opens up your world.
         renderSubtitleText();
     }
 
-    // Cập nhật nội dung hiển thị phụ đề tương ứng với trạng thái ẩn/hiện
     function renderSubtitleText() {
         var box = document.getElementById('subtitleDisplay');
         if (currentSubtitles.length > 0 && currentSubtitles[currentSentenceIndex]) {
@@ -535,7 +534,7 @@ Learning a new language opens up your world.
 
     function selectSentence(index) {
         if (index < 0 || index >= currentSubtitles.length) return;
-        isCustomPlaying = false;
+        stopCustomLoop(); // Dừng loạt câu nếu can thiệp chọn câu thủ công
 
         currentSentenceIndex = index;
         var sub = currentSubtitles[index];
@@ -567,6 +566,7 @@ Learning a new language opens up your world.
     }
 
     function togglePlay() {
+        if (isCustomPlaying) stopCustomLoop(); // Tắt lặp loạt câu nếu ấn tạm dừng chung
         if (!player || typeof player.getPlayerState !== 'function') return;
         if (isPlaying) {
             player.pauseVideo();
@@ -576,10 +576,12 @@ Learning a new language opens up your world.
     }
 
     function rewindSentence() {
+        if (isCustomPlaying) stopCustomLoop();
         selectSentence(currentSentenceIndex);
     }
 
     function nextSentence() {
+        if (isCustomPlaying) stopCustomLoop();
         if (currentSentenceIndex < currentSubtitles.length - 1) {
             selectSentence(currentSentenceIndex + 1);
         } else {
@@ -588,6 +590,7 @@ Learning a new language opens up your world.
     }
 
     function prevSentence() {
+        if (isCustomPlaying) stopCustomLoop();
         if (currentSentenceIndex > 0) {
             selectSentence(currentSentenceIndex - 1);
         }
@@ -763,7 +766,14 @@ Learning a new language opens up your world.
         }
     }
 
+    // XỬ LÝ PHÁT LẶP LOẠT CÂU LIÊN TỤC CHO ANH TRẦN TÂM
     function playCustomSentences() {
+        // Nếu đang phát loạt câu thì bấm lần nữa sẽ là DỪNG
+        if (isCustomPlaying) {
+            stopCustomLoop();
+            return;
+        }
+
         var inputVal = document.getElementById('customReviewInput').value.trim();
         if (!inputVal) {
             alert("Anh vui lòng nhập số câu (ví dụ: 1,4,5 hoặc 1-5)");
@@ -794,19 +804,31 @@ Learning a new language opens up your world.
 
         if (customPlayQueue.length > 0) {
             isCustomPlaying = true;
-            playQueueIndex(0);
+            
+            // Cập nhật giao diện nút sang trạng thái Dừng (Màu đỏ)
+            var btn = document.getElementById('customPlayBtn');
+            btn.innerHTML = "⏹️ Dừng nghe loạt câu";
+            btn.style.backgroundColor = "var(--danger)";
+            
+            currentQueueIndex = 0;
+            playQueueIndex(currentQueueIndex);
         } else {
             alert("Định dạng chuỗi nhập chưa đúng, anh kiểm tra lại nhé!");
         }
     }
 
     function playQueueIndex(queueIdx) {
-        if (!isCustomPlaying || queueIdx >= customPlayQueue.length) {
-            isCustomPlaying = false;
+        if (!isCustomPlaying) return;
+        
+        // NẾU PHÁT HẾT DANH SÁCH: Tự động quay vòng lại từ đầu câu thứ 1 trong hàng chờ (Lặp vô hạn)
+        if (queueIdx >= customPlayQueue.length) {
+            currentQueueIndex = 0;
+            playQueueIndex(0);
             return;
         }
         
-        var targetSentenceIdx = customPlayQueue[queueIdx];
+        currentQueueIndex = queueIdx;
+        var targetSentenceIdx = customPlayQueue[currentQueueIndex];
         
         if (targetSentenceIdx >= 0 && targetSentenceIdx < currentSubtitles.length) {
             currentSentenceIndex = targetSentenceIdx;
@@ -823,13 +845,33 @@ Learning a new language opens up your world.
             var sub = currentSubtitles[currentSentenceIndex];
             var durationMs = (sub.end - sub.start) * 1000;
             
-            setTimeout(function() {
+            // Xóa bộ đếm cũ nếu có trước khi kích hoạt bộ đếm mới
+            if (customTimeoutId) clearTimeout(customTimeoutId);
+            
+            customTimeoutId = setTimeout(function() {
                 if (isCustomPlaying) {
-                    playQueueIndex(queueIdx + 1);
+                    playQueueIndex(currentQueueIndex + 1);
                 }
-            }, durationMs + 800);
+            }, durationMs + 800); // Thêm khoảng nghỉ 800ms giữa các câu nghe cho thoải mái
         } else {
-            playQueueIndex(queueIdx + 1);
+            // Nếu số câu vượt quá dữ liệu thật thì nhảy qua câu tiếp theo trong hàng chờ
+            playQueueIndex(currentQueueIndex + 1);
+        }
+    }
+
+    // Hàm dùng chung để tắt chế độ phát lặp loạt câu một cách an toàn
+    function stopCustomLoop() {
+        if (!isCustomPlaying) return;
+        isCustomPlaying = false;
+        if (customTimeoutId) clearTimeout(customTimeoutId);
+        
+        // Trả nút về màu xanh ban đầu
+        var btn = document.getElementById('customPlayBtn');
+        btn.innerHTML = "🔁 Nghe loạt câu";
+        btn.style.backgroundColor = "#10b981";
+        
+        if (player && typeof player.pauseVideo === 'function') {
+            player.pauseVideo();
         }
     }
 
