@@ -71,7 +71,7 @@
 
         #player-container {
             width: 100%;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: center;
             background: #000;
@@ -84,6 +84,24 @@
             aspect-ratio: 16 / 9;
             border: none;
             display: block;
+        }
+
+        /* Khu vực hiển thị phụ đề tiếng Anh gốc của câu hiện tại */
+        .subtitle-box {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            color: #334155;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            word-break: break-word;
         }
 
         .sentence-navigation {
@@ -250,6 +268,12 @@
         <div id="player"></div>
     </div>
 
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <label style="margin-bottom: 0;">Phụ đề gốc của câu:</label>
+        <button id="toggleSubBtn" onclick="toggleSubtitleVisibility()" style="min-height: 28px; padding: 2px 10px; font-size: 12px; background-color: #64748b; color: white;">👁️ Ẩn phụ đề gốc</button>
+    </div>
+    <div class="subtitle-box" id="subtitleDisplay">Phụ đề sẽ hiển thị ở đây.</div>
+
     <div class="sentence-navigation">
         <button onclick="prevSentence()" style="min-height:36px; padding:2px 10px;">⏮️ Lùi câu</button>
         <div class="sentence-info" id="sentenceInfo">Câu: 0 / 0</div>
@@ -288,7 +312,6 @@
 </div>
 
 <script>
-    // Đã chèn chính xác 2 Link của anh gửi và chuẩn hóa lại toàn bộ trục thời gian SRT tránh lỗi đứng hình trắng màn hình
     var DANH_SACH_BAI_HOC = [
         {
             title: "Bài học 1: Daily Habits (Close the Door)",
@@ -364,11 +387,12 @@ Learning a new language opens up your world.
     var currentLessonIndex = 0;
     var isPlaying = false;
     var timeCheckInterval;
+    var showSubtitle = true; // Biến trạng thái ẩn/hiện phụ đề
 
     var customPlayQueue = [];
     var isCustomPlaying = false;
 
-    // Tải thư viện YouTube API an toàn
+    // Tải thư viện YouTube API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -384,6 +408,7 @@ Learning a new language opens up your world.
         });
         currentSubtitles = parseSRT(DANH_SACH_BAI_HOC[0].subtitles);
         updateNavigationUI();
+        renderSubtitleText();
     };
 
     function onYouTubeIframeAPIReady() {
@@ -405,7 +430,7 @@ Learning a new language opens up your world.
     }
 
     function onPlayerReady(event) {
-        // Đã sẵn sàng
+        // Sẵn sàng
     }
 
     function onPlayerStateChange(event) {
@@ -436,6 +461,7 @@ Learning a new language opens up your world.
         }
         
         updateNavigationUI();
+        renderSubtitleText();
         clearInputs();
     }
 
@@ -477,6 +503,36 @@ Learning a new language opens up your world.
         return (hours * 3600) + (mins * 60) + secs + (ms / 1000);
     }
 
+    // Hàm thực hiện chuyển đổi trạng thái nút ẩn hiện phụ đề gốc
+    function toggleSubtitleVisibility() {
+        showSubtitle = !showSubtitle;
+        var btn = document.getElementById('toggleSubBtn');
+        if (showSubtitle) {
+            btn.innerHTML = "👁️ Ẩn phụ đề gốc";
+            btn.style.backgroundColor = "#64748b";
+        } else {
+            btn.innerHTML = "👁️ Hiện phụ đề gốc";
+            btn.style.backgroundColor = "#2563eb";
+        }
+        renderSubtitleText();
+    }
+
+    // Cập nhật nội dung hiển thị phụ đề tương ứng với trạng thái ẩn/hiện
+    function renderSubtitleText() {
+        var box = document.getElementById('subtitleDisplay');
+        if (currentSubtitles.length > 0 && currentSubtitles[currentSentenceIndex]) {
+            if (showSubtitle) {
+                box.innerHTML = currentSubtitles[currentSentenceIndex].text;
+                box.style.color = "#334155";
+            } else {
+                box.innerHTML = "<i>Phụ đề gốc đang ẩn (Bấm nút phía trên để xem)</i>";
+                box.style.color = "#94a3b8";
+            }
+        } else {
+            box.innerHTML = "Không có dữ liệu phụ đề.";
+        }
+    }
+
     function selectSentence(index) {
         if (index < 0 || index >= currentSubtitles.length) return;
         isCustomPlaying = false;
@@ -484,6 +540,7 @@ Learning a new language opens up your world.
         currentSentenceIndex = index;
         var sub = currentSubtitles[index];
         updateNavigationUI();
+        renderSubtitleText();
         clearInputs();
 
         if (player && typeof player.seekTo === 'function') {
@@ -655,7 +712,6 @@ Learning a new language opens up your world.
         }
 
         words.forEach(function(word, index) {
-            // Danh sách gán tắt các từ cơ bản để tối ưu tốc độ tải trên di động
             if (word === "this") { ipaResults[index] = "ðɪs"; checkComplete(); return; }
             if (word === "is") { ipaResults[index] = "ɪz"; checkComplete(); return; }
             if (word === "a") { ipaResults[index] = "ə"; checkComplete(); return; }
@@ -756,6 +812,7 @@ Learning a new language opens up your world.
             currentSentenceIndex = targetSentenceIdx;
             
             updateNavigationUI();
+            renderSubtitleText();
             clearInputs();
 
             if (player && typeof player.seekTo === 'function') {
