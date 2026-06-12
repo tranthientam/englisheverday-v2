@@ -69,20 +69,21 @@
             height: 44px;
         }
 
-        /* KHUNG VIDEO YOUTUBE: Đã sửa hiển thị căn giữa chuẩn chỉnh không bị mất */
         #player-container {
             width: 100%;
             margin-bottom: 15px;
             display: flex;
             justify-content: center;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         #player {
             width: 100%;
-            max-width: 100%;
             aspect-ratio: 16 / 9;
-            border-radius: 10px;
-            border: 1px solid var(--border);
+            border: none;
+            display: block;
         }
 
         .sentence-navigation {
@@ -287,480 +288,64 @@
 </div>
 
 <script>
-    // Khôi phục đầy đủ bài 1 và sửa định dạng chuẩn bài 2 cho anh
+    // Đồng bộ lại chuẩn tên thuộc tính videoUrl để hàm khởi chạy không bị lỗi
     var DANH_SACH_BAI_HOC = [
         {
-            title: "Bài mẫu 1: Close the door & Food delivery",
-            youtubeId: "https://www.youtube.com/watch?v=rzFS6eqyepw&feature=youtu.be",
+            title: "Bài mẫu 1: Khởi động luyện nghe",
+            videoUrl: "https://www.youtube.com/watch?v=rzFS6eqyepw&feature=youtu.be",
             subtitles: `
-3
+1
 00:00:00,000 --> 00:00:05,420
 INTRO. LET'S START
 
-4
+2
 00:00:12,581 --> 00:00:20,420
 Let me close this door. This is a hardwood door.
 
-5
+3
 00:00:20,420 --> 00:00:27,400
 You can hear it's very thick, very thick and strong and sturdy.
 
-6
+4
 00:00:27,400 --> 00:00:30,095
 This is a sturdy door.
 
-7
+5
 00:00:30,095 --> 00:00:33,267
 Now I'm going to lock the door and
 
-8
+6
 00:00:33,267 --> 00:00:38,236
 I'm going to lock it as well with the deadbolt lock.
 
-9
+7
 00:00:38,236 --> 00:00:42,039
 This is just a safety lock so that if someone tries to open it
 
-10
+8
 00:00:42,039 --> 00:00:47,881
 This latch will stop the door from opening and this right here is a deadbolt lock.
 
-11
+9
 00:00:47,881 --> 00:00:51,252
 This is my key card. My key card.
 
-12
+10
 00:00:51,252 --> 00:00:54,000
 This is used to open the door.
 
-13
+11
 00:00:54,000 --> 00:01:00,000
 Now I'm sure you're probably wondering and thinking to yourself what is in my hand
 
-14
+12
 00:01:00,000 --> 00:01:01,500
 I'm about to show you.
-
-15
-00:01:00,727 --> 00:01:03,463
-So let's walk over or
-
-16
-00:01:03,463 --> 00:01:06,699
-go over to the dining table and let me
-
-17
-00:01:06,699 --> 00:01:09,569
-show you what we have here. You can see
-
-18
-00:01:09,569 --> 00:01:11,838
-my mom's over there. It's probably blown
-
-19
-00:01:11,838 --> 00:01:14,441
-out but you can come over to the dining
-
-20
-00:01:14,441 --> 00:01:15,141
-table. So here you can see with your eyes
-
-21
-00:01:15,141 --> 00:01:26,352
-table. So here you can see with your eyes
-
-22
-00:01:26,386 --> 00:01:29,622
-we have an assortment of different
-
-23
-00:01:29,622 --> 00:01:33,226
-products and foods. Here we have food
-
-24
-00:01:33,226 --> 00:01:35,795
-that we delivered so we went on an app
-
-25
-00:01:35,795 --> 00:01:37,797
-and we ordered this food and then
-
-26
-00:01:37,797 --> 00:01:40,066
-someone came on a scooter and delivered
-
-27
-00:01:40,066 --> 00:01:43,770
-it to us. This is like delivery. If you
-
-28
-00:01:43,770 --> 00:01:45,705
-were to go to the restaurant and pick it
-
-29
-00:01:45,705 --> 00:01:47,907
-up and not eat it at the restaurant, that
-
-30
-00:01:47,907 --> 00:01:50,276
-is called takeout and if you were to eat
-
-31
-00:01:50,276 --> 00:01:52,946
-in the restaurant that would be dine in.
-
-32
-00:01:53,046 --> 00:01:56,616
-So delivery, takeout and dine in. Here
-
-33
-00:01:56,616 --> 00:01:59,352
-you can see we have different fruits.
-
-35
-00:01:59,886 --> 00:02:01,855
-What did you do to this watermelon mom?
-
-36
-00:02:01,855 --> 00:02:04,190
-How would you describe this process that
-
-37
-00:02:04,190 --> 00:02:06,759
-you did here? I sliced the watermelon.
-
-38
-00:02:07,126 --> 00:02:10,330
-Yes so she sliced or cut the watermelon
-
-39
-00:02:10,330 --> 00:02:14,367
-into these triangle shapes. Yes that one
-
-40
-00:02:14,367 --> 00:02:17,270
-I sliced and this one I removed the skin
-
-41
-00:02:17,337 --> 00:02:20,540
-of these pieces off watermelon. Yeah and
-
-42
-00:02:20,540 --> 00:02:24,144
-here you can see this is mango. This was
-filled to the brim here but I like mango
-
-43
-00:02:27,113 --> 00:02:29,249
-so I was eating it and you can see it is
-
-44
-00:02:29,249 --> 00:02:31,317
-really soft. That's just because the
-
-45
-00:02:31,317 --> 00:02:35,054
-mango is very ripe so it's really sweet
-
-46
-00:02:35,054 --> 00:02:37,790
-right now. But how would you describe
-
-47
-00:02:37,790 --> 00:02:41,094
-this piece of watermelon? How would you
-
-48
-00:02:41,127 --> 00:02:45,164
-describe this piece of watermelon? This
-
-49
-00:02:45,164 --> 00:02:47,867
-piece of watermelon looks very juicy.
-
-50
-00:02:48,468 --> 00:02:51,371
-This piece of watermelon is red and
-
-51
-00:02:51,371 --> 00:02:54,774
-green, red and green and there are also
-
-52
-00:02:54,774 --> 00:02:58,378
-black seeds in the watermelon and finally
-
-53
-00:02:58,378 --> 00:03:01,181
-this watermelon is sweet. It is
-
-54
-00:03:01,181 --> 00:03:04,984
-sweet and after I eat it I believe I will
-
-55
-00:03:04,984 --> 00:03:08,054
-feel very refreshed. Now tell me
-
-56
-00:03:08,087 --> 00:03:11,291
-this action. What action is this from
-
-57
-00:03:11,291 --> 00:03:18,798
-these three options? So that was eating.
-
-58
-00:03:19,232 --> 00:03:21,601
-I was eating the watermelon. It wasn't
-
-59
-00:03:21,601 --> 00:03:24,137
-cooking and it wasn't drinking. It was
-
-60
-00:03:24,137 --> 00:03:26,573
-eating. Now you said you wanted to get a
-
-61
-00:03:26,573 --> 00:03:28,841
-glass of water mom? Yes I'm short one
-
-62
-00:03:28,841 --> 00:03:32,312
-glass of water. I filled up two. I'm
-
-63
-00:03:32,312 --> 00:03:35,014
-going to fill up another glass from this
-
-64
-00:03:35,014 --> 00:03:37,450
-water dispenser. Okay so you can see
-
-65
-00:03:37,450 --> 00:04:05,478
-she's pressing in this button and then
-
-66
-00:04:05,478 --> 00:04:05,478
-water is coming out. So she just filled
-
-67
-00:04:05,478 --> 00:04:05,478
-up this glass of water. It is almost full
-
-68
-00:04:05,478 --> 00:04:05,478
-but it's not full to the brim but it is
-
-69
-00:04:05,478 --> 00:04:05,478
-almost full. Anyway let's bring that to
-
-70
-00:04:05,478 --> 00:04:05,478
-the table and let's open up the three
-
-71
-00:04:05,478 --> 00:04:05,478
-dishes we got to see which one is the
-
-72
-00:04:05,478 --> 00:04:05,478
-best. Okay so what are the three dishes
-
-73
-00:04:05,478 --> 00:04:05,478
-we have here? I believe one is pho, the
-
-74
-00:04:05,478 --> 00:04:05,478
-other is bun cha and then banh mi. Did
-
-75
-00:04:05,478 --> 00:04:05,478
-you get any dessert
-
-76
-00:04:05,478 --> 00:04:05,478
-or no? The fruit is the
-
-77
-00:04:05,478 --> 00:04:05,478
-dessert. Yeah so Leon ordered these. Now
-
-78
-00:04:05,478 --> 00:04:05,478
-I believe this is the
-
-79
-00:04:05,478 --> 00:04:05,478
-pho. Oh yeah. So this
-
-80
-00:04:05,478 --> 00:04:05,478
-pho how would you describe this
-
-81
-00:04:05,478 --> 00:04:05,478
-container? What kind
-
-82
-00:04:05,478 --> 00:04:05,478
-of container is this?
-
-83
-00:04:05,478 --> 00:04:05,478
-This is a paper or cardboard container
-
-84
-00:04:05,478 --> 00:04:05,478
-with a plastic lid. Now what am I doing?
-
-85
-00:04:05,478 --> 00:04:05,478
-I'm taking off the plastic lid and now
-Locking it to the side.
-
-86
-00:04:05,478 --> 00:04:05,478
-I'm going to place the plastic lid to
-
-87
-00:04:05,478 --> 00:04:05,478
-the side and I'm going to move my water.
-
-88
-00:04:05,478 --> 00:04:05,478
-Now I'm going to open this plastic bag
-
-89
-00:04:05,478 --> 00:04:05,478
-and take out these thin pieces of bread
-
-90
-00:04:05,478 --> 00:04:05,478
-and finally I'm going to open up the last
-
-91
-00:04:05,478 --> 00:04:05,478
-plastic bag. This plastic bag has the
-
-92
-00:04:05,478 --> 00:04:05,478
-noodles and I'm going to dump the
-
-93
-00:04:05,478 --> 00:04:05,478
-noodles into the soup.
-
-94
-00:04:05,478 --> 00:04:05,478
-So here we have our soup, our pho and
-
-95
-00:04:05,478 --> 00:04:05,478
-these are chopsticks. Whoa these are
-
-96
-00:04:05,478 --> 00:04:05,478
-actually thick chopsticks. Yeah. That's
-
-97
-00:04:05,478 --> 00:04:05,478
-kind of nice. It has been sitting for a
-
-98
-00:04:05,478 --> 00:04:05,478
-while so the noodles have stuck together
-
-99
-00:04:05,478 --> 00:04:05,478
-but I think if we let them soak for a
-
-100
-00:04:05,478 --> 00:04:05,478
-bit they'll loosen up enough so that we
-
-101
-00:04:05,478 --> 00:04:05,478
-can eat the noodles easily. Do you
-
-102
-00:04:05,478 --> 00:04:05,478
-have to prepare here? We have the bun
-
-103
-00:04:05,478 --> 00:04:05,478
-cha. So here you can see this is a
-
-104
-00:04:05,478 --> 00:04:05,478
-styrofoam bowl. The other bowl was a
-
-105
-00:04:05,478 --> 00:04:05,478
-cardboard bowl. This is a styrofoam bowl.
-
-106
-00:04:05,478 --> 00:04:05,478
-One thing I would like to say is you can
-never put this in a microwave because
-
-107
-00:04:05,478 --> 00:04:05,478
-it will catch on fire and this is a very
-
-108
-00:04:05,478 --> 00:04:05,478
-flimsy plastic lid. You can see it's very
-flimsy. See very very flimsy. Okay this
-
-109
-00:04:05,478 --> 00:04:05,478
-is the fish sauce.
-
-113
-00:04:05,478 --> 00:04:05,478
-is also part of the bun cha. I think you
-
-114
-00:04:14,287 --> 00:10:16,856
-could put it on this plate. This is just
-
-115
-00:10:16,856 --> 00:10:18,958
-a small white plate.
-
-116
-00:10:18,958 --> 00:10:20,660
-Small white plate. Now
-
-117
-00:10:20,726 --> 00:10:22,895
-I'm going to place it down on the table.
-
-118
-00:10:22,895 --> 00:10:26,966
-Tip out the noodles. You can pass that
-
-119
-00:10:26,966 --> 00:10:28,301
-bag. I'm putting all
-
-120
-00:10:28,301 --> 00:10:30,836
-the garbage here. That's one thing,
-
-200
-00:11:41,600 --> 00:11:43,202
-are watching some TV after eating our lunch.
-`,
+`
         },
         {
             title: "Bài mẫu 2: Thói quen hằng ngày",
-            youtubeId: "https://youtu.be/eNvUS-6PTbs?list=RDeNvUS-6PTbs",
+            videoUrl: "https://youtu.be/eNvUS-6PTbs?list=RDeNvUS-6PTbs",
             subtitles: `
 1
 00:00:01,000 --> 00:00:05,000
@@ -783,6 +368,7 @@ Learning a new language opens up your world.
     var customPlayQueue = [];
     var isCustomPlaying = false;
 
+    // Tải thư viện YouTube Player API
     var tag = document.createElement('script');
     tag.src = "https://www.youtube.com/iframe_api";
     var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -801,23 +387,25 @@ Learning a new language opens up your world.
     };
 
     function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            videoId: DANH_SACH_BAI_HOC[0].youtubeId,
-            playerVars: {
-                'playsinline': 1,
-                'controls': 1, // Để thanh điều hướng YouTube hiển thị tự nhiên
-                'disablekb': 1,
-                'rel': 0
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
+        if(DANH_SACH_BAI_HOC.length > 0) {
+            player = new YT.Player('player', {
+                videoId: DANH_SACH_BAI_HOC[0].videoUrl,
+                playerVars: {
+                    'playsinline': 1,
+                    'controls': 1,
+                    'disablekb': 1,
+                    'rel': 0
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
     }
 
     function onPlayerReady(event) {
-        // Ready
+        // Đã sẵn sàng
     }
 
     function onPlayerStateChange(event) {
@@ -844,7 +432,7 @@ Learning a new language opens up your world.
         currentSentenceIndex = 0;
         
         if (player && typeof player.loadVideoById === 'function') {
-            player.loadVideoById(lesson.youtubeId);
+            player.loadVideoById(lesson.videoUrl);
         }
         
         updateNavigationUI();
@@ -890,9 +478,8 @@ Learning a new language opens up your world.
     }
 
     function selectSentence(index) {
-        if (!isCustomPlaying) {
-            isCustomPlaying = false;
-        }
+        if (index < 0 || index >= currentSubtitles.length) return;
+        isCustomPlaying = false;
 
         currentSentenceIndex = index;
         var sub = currentSubtitles[index];
@@ -961,18 +548,16 @@ Learning a new language opens up your world.
     function clearInputs() {
         document.getElementById('userInput').value = "";
         document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
-        if (document.getElementById('sentenceIpaDisplay')) {
-            document.getElementById('sentenceIpaDisplay').innerHTML = "";
-        }
+        var oldIpa = document.getElementById('sentenceIpaDisplay');
+        if (oldIpa) oldIpa.innerHTML = "";
     }
 
     function autoCheckOnInput() {
         var userText = document.getElementById('userInput').value.trim();
         if (!userText) {
             document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
-            if (document.getElementById('sentenceIpaDisplay')) {
-                document.getElementById('sentenceIpaDisplay').innerHTML = "";
-            }
+            var oldIpa = document.getElementById('sentenceIpaDisplay');
+            if (oldIpa) oldIpa.innerHTML = "";
             return;
         }
         
@@ -1075,7 +660,6 @@ Learning a new language opens up your world.
             if (word === "a") { ipaResults[index] = "ə"; checkComplete(); return; }
             if (word === "the") { ipaResults[index] = "ðə"; checkComplete(); return; }
             if (word === "door") { ipaResults[index] = "dɔːɹ"; checkComplete(); return; }
-            if (word === "hardwood") { ipaResults[index] = "ˈhɑɹdˌwʊd"; checkComplete(); return; }
 
             fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
                 .then(response => response.json())
@@ -1093,7 +677,6 @@ Learning a new language opens up your world.
                                 if (!phonetic) phonetic = data[0].phonetics[0].text;
                             }
                         }
-                        if (!phonetic && data[0].phonedic) { phonetic = data[0].phonetic; }
                     }
                     
                     if (phonetic) {
@@ -1172,11 +755,7 @@ Learning a new language opens up your world.
             currentSentenceIndex = targetSentenceIdx;
             
             updateNavigationUI();
-            document.getElementById('userInput').value = "";
-            document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
-            if (document.getElementById('sentenceIpaDisplay')) {
-                document.getElementById('sentenceIpaDisplay').innerHTML = "";
-            }
+            clearInputs();
 
             if (player && typeof player.seekTo === 'function') {
                 player.seekTo(currentSubtitles[currentSentenceIndex].start, true);
