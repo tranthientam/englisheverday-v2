@@ -1465,8 +1465,8 @@ Learning a new language opens up your world.
         }
     });
     // --- ĐOẠN CODE VIẾT THÊM: TỰ ĐỘNG HIỂN THỊ IPA KHI TRẢ LỜI ĐÚNG ---
+// --- ĐOẠN CODE CẬP NHẬT: TỰ ĐỘNG HIỂN THỊ IPA CHUẨN MỸ CHÍNH XÁC (AmE) ---
 function getSentenceIPA(sentenceText) {
-    // Tạo hoặc tìm ô chứa hiển thị IPA câu dưới khung kết quả
     var resultDisplay = document.getElementById('resultDisplay');
     var ipaDiv = document.getElementById('sentenceIpaDisplay');
     
@@ -1483,6 +1483,78 @@ function getSentenceIPA(sentenceText) {
         ipaDiv.style.lineHeight = '1.5';
         resultDisplay.parentNode.insertBefore(ipaDiv, resultDisplay.nextSibling);
     }
+    
+    ipaDiv.innerHTML = "🔄 Đang tải phiên âm IPA (AmE)...";
+    
+    var cleanSentence = sentenceText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"]/g,"");
+    var words = cleanSentence.toLowerCase().split(/\s+/).filter(Boolean);
+    
+    var ipaResults = new Array(words.length);
+    var completedRequests = 0;
+
+    if (words.length === 0) {
+        ipaDiv.innerHTML = "";
+        return;
+    }
+
+    words.forEach(function(word, index) {
+        // Xử lý cứng một số từ phổ biến bị từ điển trả về weak form lỗi thời
+        if (word === "this") {
+            ipaResults[index] = "ðɪs";
+            checkComplete();
+            return;
+        }
+        if (word === "is") {
+            ipaResults[index] = "ɪz";
+            checkComplete();
+            return;
+        }
+
+        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
+            .then(response => response.json())
+            .then(data => {
+                var phonetic = "";
+                if (data && data[0]) {
+                    if (data[0].phonetics && data[0].phonetics.length > 0) {
+                        // 1. Ưu tiên tìm các phiên âm có nhãn giọng Mỹ (us) và loại bỏ weak form chứa ký tự ə
+                        var usPhonetics = data[0].phonetics.filter(p => p.text && (p.audio && p.audio.includes('-us') || !p.text.includes('ə')));
+                        if (usPhonetics.length > 0) {
+                            phonetic = usPhonetics[0].text;
+                        } else {
+                            // 2. Nếu không lọc được, lấy text đầu tiên không chứa dấu schwa (ə) nếu có thể
+                            for (var p of data[0].phonetics) {
+                                if (p.text && !p.text.includes('ə')) { phonetic = p.text; break; }
+                            }
+                            if (!phonetic) phonetic = data[0].phonetics[0].text;
+                        }
+                    }
+                    if (!phonetic && data[0].phonetic) {
+                        phonetic = data[0].phonetic;
+                    }
+                }
+                
+                if (phonetic) {
+                    phonetic = phonetic.replace(/\//g, "");
+                } else {
+                    phonetic = word;
+                }
+                
+                ipaResults[index] = phonetic;
+                checkComplete();
+            })
+            .catch(err => {
+                ipaResults[index] = word;
+                checkComplete();
+            });
+    });
+
+    function checkComplete() {
+        completedRequests++;
+        if (completedRequests === words.length) {
+            ipaDiv.innerHTML = `🇺🇸 <strong>IPA (AmE):</strong> <span style="font-family: 'Segoe UI'; font-size: 16px; color: #2563eb;">/${ipaResults.join(" ")}/</span>`;
+        }
+    }
+}
     
     ipaDiv.innerHTML = "🔄 Đang tải phiên âm IPA (AmE)...";
     
