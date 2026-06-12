@@ -1133,7 +1133,6 @@ Learning a new language opens up your world.
 
         document.getElementById('userInput').value = "";
         document.getElementById('resultDisplay').innerHTML = "Kết quả đúng sai (xanh/đỏ) sẽ hiển thị ở đây.";
-        if (document.getElementById('sentenceIpaDisplay')) document.getElementById('sentenceIpaDisplay').innerHTML = "";
 
         if (player && isPlayerReady) {
             player.loadVideoById(videoId);
@@ -1246,10 +1245,11 @@ Learning a new language opens up your world.
     }
 
     // LOGIC KÍCH HOẠT VÒNG LẶP ĐOẠN TÙY CHỌN THEO ĐÚNG SỐ THỨ TỰ SRT
+    // LOGIC KÍCH HOẠT VÒNG LẶP ĐOẠN TÙY CHỌN (HỖ TRỢ PHẨY VÀ GẠCH NGANG)
     function startSegmentLoop() {
         var inputVal = document.getElementById('loopSegments').value.trim();
         if (!inputVal) {
-            alert("Anh vui lòng nhập số câu cần nghe (Ví dụ: 1,2,3)!");
+            alert("Anh vui lòng nhập số câu cần nghe (Ví dụ: 1,4,5 hoặc 1-5)!");
             return;
         }
         if (subtitles.length === 0 || !player || typeof player.seekTo !== 'function') {
@@ -1257,15 +1257,60 @@ Learning a new language opens up your world.
             return;
         }
 
-        var rawSegments = inputVal.split(',');
+        // Tách các cụm bằng dấu phẩy trước
+        var rawParts = inputVal.split(',');
         segmentQueue = [];
-        for (var i = 0; i < rawSegments.length; i++) {
-            var num = parseInt(rawSegments[i].trim(), 10);
-            // Đối chiếu index mảng srt (người dùng gõ câu 1 tức là mảng index 0)
-            if (!isNaN(num) && num > 0 && num <= subtitles.length) {
-                segmentQueue.push(num - 1);
+
+        for (var i = 0; i < rawParts.length; i++) {
+            var part = rawParts[i].trim();
+            if (!part) continue;
+
+            // Kiểm tra xem cụm này có chứa dấu gạch ngang dạng định tuyến dải ô (VD: 1-5) hay không
+            if (part.includes('-')) {
+                var rangeParts = part.split('-');
+                if (rangeParts.length === 2) {
+                    var startNum = parseInt(rangeParts[0].trim(), 10);
+                    var endNum = parseInt(rangeParts[1].trim(), 10);
+
+                    if (!isNaN(startNum) && !isNaN(endNum) && startNum > 0 && endNum > 0) {
+                        // Hoán đổi nếu anh lỡ tay gõ ngược (Ví dụ: 5-1)
+                        var realStart = Math.min(startNum, endNum);
+                        var realEnd = Math.max(startNum, endNum);
+
+                        // Thêm toàn bộ các câu trong khoảng dải ô vào danh sách
+                        for (var j = realStart; j <= realEnd; j++) {
+                            if (j <= subtitles.length) {
+                                segmentQueue.push(j - 1); // Đưa về index mảng (trừ 1)
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Nếu là số đơn lẻ bình thường (Ví dụ: 1 hoặc 4 hoặc 5)
+                var num = parseInt(part, 10);
+                if (!isNaN(num) && num > 0 && num <= subtitles.length) {
+                    segmentQueue.push(num - 1);
+                }
             }
         }
+
+        // Loại bỏ các số trùng lặp nếu anh gõ nhầm (Ví dụ: 1-3,3,4) và sắp xếp tăng dần
+        segmentQueue = Array.from(new Set(segmentQueue)).sort(function(a, b) { return a - b; });
+
+        if (segmentQueue.length === 0) {
+            alert("Số thứ tự câu nhập vào không đúng hoặc vượt quá số câu của bài!");
+            return;
+        }
+
+        // Tắt lặp đơn câu mặc định để tránh tranh chấp
+        document.getElementById('autoLoopCheck').checked = false;
+        
+        isSegmentLooping = true;
+        currentSegmentQueueIndex = 0;
+        document.getElementById('stopLoopBtn').style.display = 'inline-block';
+
+        playSelectedSegmentQueue();
+    }
 
         if (segmentQueue.length === 0) {
             alert("Số thứ tự câu nhập vào không đúng hoặc vượt quá số câu của bài!");
@@ -1396,13 +1441,6 @@ Learning a new language opens up your world.
             }
         }
         document.getElementById('resultDisplay').innerHTML = resultHtml;
-        // Tự động gọi hiển thị IPA câu giọng Mỹ nếu gõ đúng hoàn toàn
-        if (userText && !resultHtml.includes('word-incorrect') && !resultHtml.includes('_')) {
-            getSentenceIPA(correctText);
-        } else {
-            var oldIpa = document.getElementById('sentenceIpaDisplay');
-            if (oldIpa) oldIpa.innerHTML = "";
-        }
     }
 
     function giveHint() {
@@ -1455,89 +1493,7 @@ Learning a new language opens up your world.
             })
             .catch(err => { resultDiv.innerHTML = "⚠️ Lỗi kết nối từ điển."; });
     }
-// --- ĐOẠN CODE VIẾT THÊM: TỰ ĐỘNG HIỂN THỊ IPA CHUẨN MỸ CẢ CÂU (AmE) ---
-function getSentenceIPA(sentenceText) {
-    var resultDisplay = document.getElementById('resultDisplay');
-    var ipaDiv = document.getElementById('sentenceIpaDisplay');
-    
-    // Tạo ô chứa hiển thị IPA câu nếu chưa có
-    if (!ipaDiv) {
-        ipaDiv = document.createElement('div');
-        ipaDiv.id = 'sentenceIpaDisplay';
-        ipaDiv.style.marginTop = '10px';
-        ipaDiv.style.padding = '10px';
-        ipaDiv.style.backgroundColor = '#f0fdf4';
-        ipaDiv.style.border = '1px solid #bbf7d0';
-        ipaDiv.style.borderRadius = '8px';
-        ipaDiv.style.fontSize = '15px';
-        ipaDiv.style.color = '#166534';
-        ipaDiv.style.lineHeight = '1.5';
-        resultDisplay.parentNode.insertBefore(ipaDiv, resultDisplay.nextSibling);
-    }
-    
-    ipaDiv.innerHTML = "🔄 Đang tải phiên âm IPA (AmE)...";
-    
-    var cleanSentence = sentenceText.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"]/g,"");
-    var words = cleanSentence.toLowerCase().split(/\s+/).filter(Boolean);
-    
-    var ipaResults = new Array(words.length);
-    var completedRequests = 0;
 
-    if (words.length === 0) {
-        ipaDiv.innerHTML = "";
-        return;
-    }
-
-    words.forEach(function(word, index) {
-        // Ép cấu hình cứng (Hard-code) các từ cốt lõi để đảm bảo chuẩn AmE rõ ràng
-        if (word === "this") { ipaResults[index] = "ðɪs"; checkComplete(); return; }
-        if (word === "is") { ipaResults[index] = "ɪz"; checkComplete(); return; }
-        if (word === "the") { ipaResults[index] = "ðə"; checkComplete(); return; }
-        if (word === "that") { ipaResults[index] = "ðæt"; checkComplete(); return; }
-
-        fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`)
-            .then(response => response.json())
-            .then(data => {
-                var phonetic = "";
-                if (data && data[0]) {
-                    if (data[0].phonetics && data[0].phonetics.length > 0) {
-                        // 1. Lọc ưu tiên giọng Mỹ và không chứa âm lướt Schwa (ə)
-                        var usPhonetics = data[0].phonetics.filter(p => p.text && (p.audio && p.audio.includes('-us') || !p.text.includes('ə')));
-                        if (usPhonetics.length > 0) {
-                            phonetic = usPhonetics[0].text;
-                        } else {
-                            // 2. Nếu không lọc được US, lấy text đầu tiên không chứa 'ə'
-                            for (var p of data[0].phonetics) {
-                                if (p.text && !p.text.includes('ə')) { phonetic = p.text; break; }
-                            }
-                            if (!phonetic) phonetic = data[0].phonetics[0].text;
-                        }
-                    }
-                    if (!phonetic && data[0].phonedtic) { phonetic = data[0].phonetic; }
-                }
-                
-                if (phonetic) {
-                    phonetic = phonetic.replace(/\//g, "");
-                } else {
-                    phonetic = word;
-                }
-                
-                ipaResults[index] = phonetic;
-                checkComplete();
-            })
-            .catch(err => {
-                ipaResults[index] = word;
-                checkComplete();
-            });
-    });
-
-    function checkComplete() {
-        completedRequests++;
-        if (completedRequests === words.length) {
-            ipaDiv.innerHTML = `🇺🇸 <strong>IPA (AmE):</strong> <span style="font-family: 'Segoe UI'; font-size: 16px; color: #2563eb;">/${ipaResults.join(" ")}/</span>`;
-        }
-    }
-}
     // Phím tắt PC cũ của anh
     document.addEventListener('keydown', function(e) {
         if (e.ctrlKey) {
